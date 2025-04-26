@@ -1,0 +1,1098 @@
+Folder PATH listing for volume Windows
+Volume serial number is 9E1A-189F
+C:.
+¦   .editorconfig
+¦   Directory.Build.props
+¦   Directory.Packages.props
+¦   directory_structure.txt
+¦   launchSettings.json
+¦   TestNest.CleanArchitecture.sln
+¦   TestNest.CleanArchitecture.slnLaunch.user
+¦   
++---bin
+¦   +---Debug
+¦       ¦   appsettings.Development.json
+¦       ¦   appsettings.json
+¦       ¦   Mapster.Core.dll
+¦       ¦   Mapster.DependencyInjection.dll
+¦       ¦   Mapster.dll
+¦       ¦   Microsoft.AspNetCore.JsonPatch.dll
+¦       ¦   Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+¦       ¦   Microsoft.Data.SqlClient.dll
+¦       ¦   Microsoft.EntityFrameworkCore.Abstractions.dll
+¦       ¦   Microsoft.EntityFrameworkCore.dll
+¦       ¦   Microsoft.EntityFrameworkCore.Relational.dll
+¦       ¦   Microsoft.EntityFrameworkCore.SqlServer.dll
+¦       ¦   Microsoft.Extensions.Caching.Memory.dll
+¦       ¦   Microsoft.Extensions.DependencyInjection.Abstractions.dll
+¦       ¦   Microsoft.Extensions.DependencyInjection.dll
+¦       ¦   Microsoft.Extensions.Diagnostics.Abstractions.dll
+¦       ¦   Microsoft.Extensions.Hosting.Abstractions.dll
+¦       ¦   Microsoft.Extensions.Logging.Abstractions.dll
+¦       ¦   Microsoft.Extensions.Logging.dll
+¦       ¦   Microsoft.Extensions.ObjectPool.dll
+¦       ¦   Microsoft.Extensions.Options.dll
+¦       ¦   Microsoft.Identity.Client.dll
+¦       ¦   Microsoft.OpenApi.dll
+¦       ¦   Newtonsoft.Json.Bson.dll
+¦       ¦   Newtonsoft.Json.dll
+¦       ¦   Swashbuckle.AspNetCore.Swagger.dll
+¦       ¦   Swashbuckle.AspNetCore.SwaggerGen.dll
+¦       ¦   Swashbuckle.AspNetCore.SwaggerUI.dll
+¦       ¦   TestNest.Admin.API.deps.json
+¦       ¦   TestNest.Admin.API.dll
+¦       ¦   TestNest.Admin.API.exe
+¦       ¦   TestNest.Admin.API.pdb
+¦       ¦   TestNest.Admin.API.runtimeconfig.json
+¦       ¦   TestNest.Admin.API.staticwebassets.endpoints.json
+¦       ¦   TestNest.Admin.API.xml
+¦       ¦   TestNest.Admin.Application.dll
+¦       ¦   TestNest.Admin.Application.pdb
+¦       ¦   TestNest.Admin.Domain.dll
+¦       ¦   TestNest.Admin.Domain.pdb
+¦       ¦   TestNest.Admin.Infrastructure.dll
+¦       ¦   TestNest.Admin.Infrastructure.pdb
+¦       ¦   TestNest.Admin.SharedLibrary.dll
+¦       ¦   TestNest.Admin.SharedLibrary.pdb
+¦       ¦   
+¦       +---cs
+¦       ¦       Microsoft.Data.SqlClient.resources.dll
+¦       ¦       
+¦       +---de
+¦       ¦       Microsoft.Data.SqlClient.resources.dll
+¦       ¦       
+¦       +---es
+¦       ¦       Microsoft.Data.SqlClient.resources.dll
+¦       ¦       
+¦       +---fr
+¦       ¦       Microsoft.Data.SqlClient.resources.dll
+¦       ¦       
+¦       +---it
+¦       ¦       Microsoft.Data.SqlClient.resources.dll
+¦       ¦       
+¦       +---ja
+¦       ¦       Microsoft.Data.SqlClient.resources.dll
+¦       ¦       
+¦       +---ko
+¦       ¦       Microsoft.Data.SqlClient.resources.dll
+¦       ¦       
+¦       +---pl
+¦       ¦       Microsoft.Data.SqlClient.resources.dll
+¦       ¦       
+¦       +---pt-BR
+¦       ¦       Microsoft.Data.SqlClient.resources.dll
+¦       ¦       
+¦       +---ru
+¦       ¦       Microsoft.Data.SqlClient.resources.dll
+¦       ¦       
+¦       +---tr
+¦       ¦       Microsoft.Data.SqlClient.resources.dll
+¦       ¦       
+¦       +---zh-Hans
+¦       ¦       Microsoft.Data.SqlClient.resources.dll
+¦       ¦       
+¦       +---zh-Hant
+¦               Microsoft.Data.SqlClient.resources.dll
+¦               
++---obj
+¦   +---Debug
+¦   ¦       docker-c.35A3FFBA.Up2Date
+¦   ¦       docker-compose.dcproj.AssemblyReference.cache
+¦   ¦       docker-compose.dcproj.CoreCompileInputs.cache
+¦   ¦       docker-compose.dcproj.FileListAbsolute.txt
+¦   ¦       
+¦   +---Docker
+¦       ¦   CachedComposeConfigFilePaths.cache
+¦       ¦   docker-compose.vs.debug.g.yml
+¦       ¦   docker-compose.vs.debug.partial.g.yml
+¦       ¦   docker-compose.vs.release.g.yml
+¦       ¦   docker-compose.vs.release.partial.g.yml
+¦       ¦   DockerDevelopmentMode.cache
+¦       ¦   DOCKER_REGISTRY.cache
+¦       ¦   HashOfDockerArtifacts.cache
+¦       ¦   LaunchContext.cache
+¦       ¦   MergedDockerCompose.cache
+¦       ¦   MergedDockerCompose1.cache
+¦       ¦   MergedDockerCompose2.cache
+¦       ¦   MergedDockerCompose3.cache
+¦       ¦   TargetOS.cache
+¦       ¦   
+¦       +---obj
+¦       ¦   +---Docker
+¦       ¦           ContainerCreationResult.cache
+¦       ¦           
+¦       +---testnest.admin.api
+¦               AbsoluteOutputAssemblyPath.cache
+¦               BuildContextPath.cache
+¦               ContainerDebugAbsoluteOutputAssemblyPath.cache
+¦               DistrolessHelperSupported.cache
+¦               ProjectReferences.cache
+¦               ProjectType.cache
+¦               TargetFramework.cache
+¦               TargetFrameworkVersion.cache
+¦               VolumeMappingsForStaticWebAssets.cache
+¦               VolumeMappingsForTools.cache
+¦               
++---TestNest.Admin.API
+¦   ¦   appsettings.Development.json
+¦   ¦   appsettings.json
+¦   ¦   Program.cs
+¦   ¦   TestNest.Admin.API.csproj
+¦   ¦   TestNest.Admin.API.csproj.user
+¦   ¦   
+¦   +---bin
+¦   ¦   +---Debug
+¦   ¦       +---net8.0
+¦   ¦           ¦   appsettings.Development.json
+¦   ¦           ¦   appsettings.json
+¦   ¦           ¦   Azure.Core.dll
+¦   ¦           ¦   Azure.Identity.dll
+¦   ¦           ¦   Humanizer.dll
+¦   ¦           ¦   Mapster.Core.dll
+¦   ¦           ¦   Mapster.DependencyInjection.dll
+¦   ¦           ¦   Mapster.dll
+¦   ¦           ¦   Microsoft.AspNetCore.JsonPatch.dll
+¦   ¦           ¦   Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+¦   ¦           ¦   Microsoft.Bcl.AsyncInterfaces.dll
+¦   ¦           ¦   Microsoft.Bcl.Cryptography.dll
+¦   ¦           ¦   Microsoft.CodeAnalysis.CSharp.dll
+¦   ¦           ¦   Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+¦   ¦           ¦   Microsoft.CodeAnalysis.dll
+¦   ¦           ¦   Microsoft.CodeAnalysis.Workspaces.dll
+¦   ¦           ¦   Microsoft.Data.SqlClient.dll
+¦   ¦           ¦   Microsoft.EntityFrameworkCore.Abstractions.dll
+¦   ¦           ¦   Microsoft.EntityFrameworkCore.Design.dll
+¦   ¦           ¦   Microsoft.EntityFrameworkCore.dll
+¦   ¦           ¦   Microsoft.EntityFrameworkCore.Relational.dll
+¦   ¦           ¦   Microsoft.EntityFrameworkCore.SqlServer.dll
+¦   ¦           ¦   Microsoft.Extensions.Caching.Memory.dll
+¦   ¦           ¦   Microsoft.Extensions.DependencyInjection.Abstractions.dll
+¦   ¦           ¦   Microsoft.Extensions.DependencyInjection.dll
+¦   ¦           ¦   Microsoft.Extensions.DependencyModel.dll
+¦   ¦           ¦   Microsoft.Extensions.Diagnostics.Abstractions.dll
+¦   ¦           ¦   Microsoft.Extensions.Hosting.Abstractions.dll
+¦   ¦           ¦   Microsoft.Extensions.Logging.Abstractions.dll
+¦   ¦           ¦   Microsoft.Extensions.Logging.dll
+¦   ¦           ¦   Microsoft.Extensions.ObjectPool.dll
+¦   ¦           ¦   Microsoft.Extensions.Options.dll
+¦   ¦           ¦   Microsoft.Identity.Client.dll
+¦   ¦           ¦   Microsoft.Identity.Client.Extensions.Msal.dll
+¦   ¦           ¦   Microsoft.IdentityModel.Abstractions.dll
+¦   ¦           ¦   Microsoft.IdentityModel.JsonWebTokens.dll
+¦   ¦           ¦   Microsoft.IdentityModel.Logging.dll
+¦   ¦           ¦   Microsoft.IdentityModel.Protocols.dll
+¦   ¦           ¦   Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+¦   ¦           ¦   Microsoft.IdentityModel.Tokens.dll
+¦   ¦           ¦   Microsoft.OpenApi.dll
+¦   ¦           ¦   Microsoft.SqlServer.Server.dll
+¦   ¦           ¦   Mono.TextTemplating.dll
+¦   ¦           ¦   Newtonsoft.Json.Bson.dll
+¦   ¦           ¦   Newtonsoft.Json.dll
+¦   ¦           ¦   Swashbuckle.AspNetCore.Swagger.dll
+¦   ¦           ¦   Swashbuckle.AspNetCore.SwaggerGen.dll
+¦   ¦           ¦   Swashbuckle.AspNetCore.SwaggerUI.dll
+¦   ¦           ¦   System.ClientModel.dll
+¦   ¦           ¦   System.CodeDom.dll
+¦   ¦           ¦   System.Composition.AttributedModel.dll
+¦   ¦           ¦   System.Composition.Convention.dll
+¦   ¦           ¦   System.Composition.Hosting.dll
+¦   ¦           ¦   System.Composition.Runtime.dll
+¦   ¦           ¦   System.Composition.TypedParts.dll
+¦   ¦           ¦   System.Configuration.ConfigurationManager.dll
+¦   ¦           ¦   System.Diagnostics.EventLog.dll
+¦   ¦           ¦   System.IdentityModel.Tokens.Jwt.dll
+¦   ¦           ¦   System.Memory.Data.dll
+¦   ¦           ¦   System.Security.Cryptography.Pkcs.dll
+¦   ¦           ¦   System.Security.Cryptography.ProtectedData.dll
+¦   ¦           ¦   TestNest.Admin.API.deps.json
+¦   ¦           ¦   TestNest.Admin.API.dll
+¦   ¦           ¦   TestNest.Admin.API.exe
+¦   ¦           ¦   TestNest.Admin.API.pdb
+¦   ¦           ¦   TestNest.Admin.API.runtimeconfig.json
+¦   ¦           ¦   TestNest.Admin.API.staticwebassets.endpoints.json
+¦   ¦           ¦   TestNest.Admin.API.xml
+¦   ¦           ¦   TestNest.Admin.Application.dll
+¦   ¦           ¦   TestNest.Admin.Application.pdb
+¦   ¦           ¦   TestNest.Admin.Domain.dll
+¦   ¦           ¦   TestNest.Admin.Domain.pdb
+¦   ¦           ¦   TestNest.Admin.Infrastructure.dll
+¦   ¦           ¦   TestNest.Admin.Infrastructure.pdb
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.dll
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.pdb
+¦   ¦           ¦   
+¦   ¦           +---cs
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.Data.SqlClient.resources.dll
+¦   ¦           ¦       
+¦   ¦           +---de
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.Data.SqlClient.resources.dll
+¦   ¦           ¦       
+¦   ¦           +---es
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.Data.SqlClient.resources.dll
+¦   ¦           ¦       
+¦   ¦           +---fr
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.Data.SqlClient.resources.dll
+¦   ¦           ¦       
+¦   ¦           +---it
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.Data.SqlClient.resources.dll
+¦   ¦           ¦       
+¦   ¦           +---ja
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.Data.SqlClient.resources.dll
+¦   ¦           ¦       
+¦   ¦           +---ko
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.Data.SqlClient.resources.dll
+¦   ¦           ¦       
+¦   ¦           +---pl
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.Data.SqlClient.resources.dll
+¦   ¦           ¦       
+¦   ¦           +---pt-BR
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.Data.SqlClient.resources.dll
+¦   ¦           ¦       
+¦   ¦           +---ru
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.Data.SqlClient.resources.dll
+¦   ¦           ¦       
+¦   ¦           +---runtimes
+¦   ¦           ¦   +---unix
+¦   ¦           ¦   ¦   +---lib
+¦   ¦           ¦   ¦       +---net6.0
+¦   ¦           ¦   ¦       +---net8.0
+¦   ¦           ¦   ¦               Microsoft.Data.SqlClient.dll
+¦   ¦           ¦   ¦               
+¦   ¦           ¦   +---win
+¦   ¦           ¦   ¦   +---lib
+¦   ¦           ¦   ¦       +---net6.0
+¦   ¦           ¦   ¦       +---net8.0
+¦   ¦           ¦   ¦               Microsoft.Data.SqlClient.dll
+¦   ¦           ¦   ¦               System.Diagnostics.EventLog.dll
+¦   ¦           ¦   ¦               System.Security.Cryptography.Pkcs.dll
+¦   ¦           ¦   ¦               
+¦   ¦           ¦   +---win-arm
+¦   ¦           ¦   ¦   +---native
+¦   ¦           ¦   +---win-arm64
+¦   ¦           ¦   ¦   +---native
+¦   ¦           ¦   ¦           Microsoft.Data.SqlClient.SNI.dll
+¦   ¦           ¦   ¦           
+¦   ¦           ¦   +---win-x64
+¦   ¦           ¦   ¦   +---native
+¦   ¦           ¦   ¦           Microsoft.Data.SqlClient.SNI.dll
+¦   ¦           ¦   ¦           
+¦   ¦           ¦   +---win-x86
+¦   ¦           ¦       +---native
+¦   ¦           ¦               Microsoft.Data.SqlClient.SNI.dll
+¦   ¦           ¦               
+¦   ¦           +---tr
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.Data.SqlClient.resources.dll
+¦   ¦           ¦       
+¦   ¦           +---zh-Hans
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.resources.dll
+¦   ¦           ¦       Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦           ¦       Microsoft.Data.SqlClient.resources.dll
+¦   ¦           ¦       
+¦   ¦           +---zh-Hant
+¦   ¦                   Microsoft.CodeAnalysis.CSharp.resources.dll
+¦   ¦                   Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+¦   ¦                   Microsoft.CodeAnalysis.resources.dll
+¦   ¦                   Microsoft.CodeAnalysis.Workspaces.resources.dll
+¦   ¦                   Microsoft.Data.SqlClient.resources.dll
+¦   ¦                   
+¦   +---Controllers
+¦   ¦       EmployeeRolesController.cs
+¦   ¦       EmployeesController.cs
+¦   ¦       EstablishmentAddressesController.cs
+¦   ¦       EstablishmentContactsController.cs
+¦   ¦       EstablishmentMembersController.cs
+¦   ¦       EstablishmentPhonesController.cs
+¦   ¦       EstablishmentsController.cs
+¦   ¦       SocialMediaPlatformsController.cs
+¦   ¦       
+¦   +---Exceptions
+¦   ¦       ErrorResponseService.cs
+¦   ¦       
+¦   +---Helpers
+¦   ¦       IdHelper.cs
+¦   ¦       
+¦   +---Mappings
+¦   ¦       MapsterMappingConfig.cs
+¦   ¦       
+¦   +---Middleware
+¦   ¦       ExceptionHandlingMiddleware.cs
+¦   ¦       
+¦   +---obj
+¦   ¦   ¦   project.assets.json
+¦   ¦   ¦   project.nuget.cache
+¦   ¦   ¦   TestNest.Admin.API.csproj.EntityFrameworkCore.targets
+¦   ¦   ¦   TestNest.Admin.API.csproj.nuget.dgspec.json
+¦   ¦   ¦   TestNest.Admin.API.csproj.nuget.g.props
+¦   ¦   ¦   TestNest.Admin.API.csproj.nuget.g.targets
+¦   ¦   ¦   
+¦   ¦   +---Debug
+¦   ¦   ¦   +---net8.0
+¦   ¦   ¦       ¦   .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+¦   ¦   ¦       ¦   ApiEndpoints.json
+¦   ¦   ¦       ¦   apphost.exe
+¦   ¦   ¦       ¦   staticwebassets.build.endpoints.json
+¦   ¦   ¦       ¦   staticwebassets.build.json
+¦   ¦   ¦       ¦   staticwebassets.references.upToDateCheck.txt
+¦   ¦   ¦       ¦   staticwebassets.removed.txt
+¦   ¦   ¦       ¦   TestNest.918D6312.Up2Date
+¦   ¦   ¦       ¦   TestNest.Admin.API.AssemblyInfo.cs
+¦   ¦   ¦       ¦   TestNest.Admin.API.AssemblyInfoInputs.cache
+¦   ¦   ¦       ¦   TestNest.Admin.API.assets.cache
+¦   ¦   ¦       ¦   TestNest.Admin.API.csproj.AssemblyReference.cache
+¦   ¦   ¦       ¦   TestNest.Admin.API.csproj.BuildWithSkipAnalyzers
+¦   ¦   ¦       ¦   TestNest.Admin.API.csproj.CoreCompileInputs.cache
+¦   ¦   ¦       ¦   TestNest.Admin.API.csproj.FileListAbsolute.txt
+¦   ¦   ¦       ¦   TestNest.Admin.API.dll
+¦   ¦   ¦       ¦   TestNest.Admin.API.GeneratedMSBuildEditorConfig.editorconfig
+¦   ¦   ¦       ¦   TestNest.Admin.API.genruntimeconfig.cache
+¦   ¦   ¦       ¦   TestNest.Admin.API.GlobalUsings.g.cs
+¦   ¦   ¦       ¦   TestNest.Admin.API.MvcApplicationPartsAssemblyInfo.cache
+¦   ¦   ¦       ¦   TestNest.Admin.API.MvcApplicationPartsAssemblyInfo.cs
+¦   ¦   ¦       ¦   TestNest.Admin.API.pdb
+¦   ¦   ¦       ¦   TestNest.Admin.API.xml
+¦   ¦   ¦       ¦   
+¦   ¦   ¦       +---EndpointInfo
+¦   ¦   ¦       ¦       TestNest.Admin.API.json
+¦   ¦   ¦       ¦       TestNest.Admin.API.OpenApiFiles.cache
+¦   ¦   ¦       ¦       
+¦   ¦   ¦       +---ref
+¦   ¦   ¦       ¦       TestNest.Admin.API.dll
+¦   ¦   ¦       ¦       
+¦   ¦   ¦       +---refint
+¦   ¦   ¦       ¦       TestNest.Admin.API.dll
+¦   ¦   ¦       ¦       
+¦   ¦   ¦       +---staticwebassets
+¦   ¦   ¦               msbuild.build.TestNest.Admin.API.props
+¦   ¦   ¦               msbuild.buildMultiTargeting.TestNest.Admin.API.props
+¦   ¦   ¦               msbuild.buildTransitive.TestNest.Admin.API.props
+¦   ¦   ¦               
+¦   ¦   +---Docker
+¦   +---Properties
+¦           launchSettings.json
+¦           
++---TestNest.Admin.Application
+¦   ¦   ServiceRegistration.cs
+¦   ¦   TestNest.Admin.Application.csproj
+¦   ¦   
+¦   +---bin
+¦   ¦   +---Debug
+¦   ¦       +---net8.0
+¦   ¦               TestNest.Admin.Application.deps.json
+¦   ¦               TestNest.Admin.Application.dll
+¦   ¦               TestNest.Admin.Application.pdb
+¦   ¦               TestNest.Admin.Domain.dll
+¦   ¦               TestNest.Admin.Domain.pdb
+¦   ¦               TestNest.Admin.SharedLibrary.dll
+¦   ¦               TestNest.Admin.SharedLibrary.pdb
+¦   ¦               
+¦   +---Contracts
+¦   ¦   +---Common
+¦   ¦   ¦       IGenericRepository.cs
+¦   ¦   ¦       IUnitOfWork.cs
+¦   ¦   ¦       
+¦   ¦   +---Interfaces
+¦   ¦       +---Persistence
+¦   ¦       ¦       IEmployeeRepository.cs
+¦   ¦       ¦       IEmployeeRoleRepository.cs
+¦   ¦       ¦       IEstablishmentAddressRepository.cs
+¦   ¦       ¦       IEstablishmentContactRepository.cs
+¦   ¦       ¦       IEstablishmentMemberRepository.cs
+¦   ¦       ¦       IEstablishmentPhoneRepository.cs
+¦   ¦       ¦       IEstablishmentRepository.cs
+¦   ¦       ¦       ISocialMediaPlatformRepository.cs
+¦   ¦       ¦       
+¦   ¦       +---Service
+¦   ¦               IEmployeeRoleService.cs
+¦   ¦               IEmployeeService.cs
+¦   ¦               IEstablishmentAddressService.cs
+¦   ¦               IEstablishmentContactService.cs
+¦   ¦               IEstablishmentMemberService.cs
+¦   ¦               IEstablishmentPhoneService.cs
+¦   ¦               IEstablishmentService.cs
+¦   ¦               ISocialMediaPlatformService.cs
+¦   ¦               
+¦   +---Exceptions
+¦   ¦       SqlServerExceptionHandlerFactory.cs
+¦   ¦       
+¦   +---Interfaces
+¦   ¦       IDatabaseExceptionHandlerFactory.cs
+¦   ¦       
+¦   +---obj
+¦   ¦   ¦   project.assets.json
+¦   ¦   ¦   project.nuget.cache
+¦   ¦   ¦   TestNest.Admin.Application.csproj.nuget.dgspec.json
+¦   ¦   ¦   TestNest.Admin.Application.csproj.nuget.g.props
+¦   ¦   ¦   TestNest.Admin.Application.csproj.nuget.g.targets
+¦   ¦   ¦   
+¦   ¦   +---Debug
+¦   ¦       +---net8.0
+¦   ¦           ¦   .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+¦   ¦           ¦   TestNest.7BB61C32.Up2Date
+¦   ¦           ¦   TestNest.Admin.Application.AssemblyInfo.cs
+¦   ¦           ¦   TestNest.Admin.Application.AssemblyInfoInputs.cache
+¦   ¦           ¦   TestNest.Admin.Application.assets.cache
+¦   ¦           ¦   TestNest.Admin.Application.csproj.AssemblyReference.cache
+¦   ¦           ¦   TestNest.Admin.Application.csproj.BuildWithSkipAnalyzers
+¦   ¦           ¦   TestNest.Admin.Application.csproj.CoreCompileInputs.cache
+¦   ¦           ¦   TestNest.Admin.Application.csproj.FileListAbsolute.txt
+¦   ¦           ¦   TestNest.Admin.Application.dll
+¦   ¦           ¦   TestNest.Admin.Application.GeneratedMSBuildEditorConfig.editorconfig
+¦   ¦           ¦   TestNest.Admin.Application.GlobalUsings.g.cs
+¦   ¦           ¦   TestNest.Admin.Application.pdb
+¦   ¦           ¦   
+¦   ¦           +---ref
+¦   ¦           ¦       TestNest.Admin.Application.dll
+¦   ¦           ¦       
+¦   ¦           +---refint
+¦   ¦                   TestNest.Admin.Application.dll
+¦   ¦                   
+¦   +---Services
+¦   ¦   ¦   EmployeeRoleService.cs
+¦   ¦   ¦   EmployeeService.cs
+¦   ¦   ¦   EstablishmentAddressService.cs
+¦   ¦   ¦   EstablishmentContactService.cs
+¦   ¦   ¦   EstablishmentMemberService.cs
+¦   ¦   ¦   EstablishmentPhoneService.cs
+¦   ¦   ¦   EstablishmentService.cs
+¦   ¦   ¦   SocialMediaPlatformService.cs
+¦   ¦   ¦   
+¦   ¦   +---Base
+¦   ¦           BaseService.cs
+¦   ¦           
+¦   +---Specifications
+¦       +---Common
+¦       ¦       BaseSpecification.cs
+¦       ¦       ISpecification.cs
+¦       ¦       SortDirection.cs
+¦       ¦       
+¦       +---EmployeeRoleSpecifications
+¦       ¦       EmployeeRoleSpecification.cs
+¦       ¦       
+¦       +---EmployeeSpecifications
+¦       ¦       EmployeeSpecification.cs
+¦       ¦       
+¦       +---EstablishmentAddressesSpecifications
+¦       ¦       EstablishmentAddressSpecification.cs
+¦       ¦       
+¦       +---EstablishmentContactSpecifications
+¦       ¦       EstablishmentContactSpecification.cs
+¦       ¦       
+¦       +---EstablishmentMemberSpecifications
+¦       ¦       EstablishmentMemberSpecification.cs
+¦       ¦       
+¦       +---EstablishmentPhoneSpecifications
+¦       ¦       EstablishmentPhoneSpecification.cs
+¦       ¦       
+¦       +---EstablishmentSpecifications
+¦       ¦       EstablishmentSpecification.cs
+¦       ¦       
+¦       +---Extensions
+¦       ¦       SpecificationExtensions.cs
+¦       ¦       
+¦       +---SoicalMediaPlatfomrSpecifications
+¦               SocialMediaPlatformSpecification.cs
+¦               
++---TestNest.Admin.Domain
+¦   ¦   TestNest.Admin.Domain.csproj
+¦   ¦   
+¦   +---bin
+¦   ¦   +---Debug
+¦   ¦       +---net8.0
+¦   ¦               TestNest.Admin.Domain.deps.json
+¦   ¦               TestNest.Admin.Domain.dll
+¦   ¦               TestNest.Admin.Domain.pdb
+¦   ¦               TestNest.Admin.SharedLibrary.dll
+¦   ¦               TestNest.Admin.SharedLibrary.pdb
+¦   ¦               
+¦   +---Employees
+¦   ¦       Employee.cs
+¦   ¦       EmployeeRole.cs
+¦   ¦       
+¦   +---Establishments
+¦   ¦       Establishment.cs
+¦   ¦       EstablishmentAddress.cs
+¦   ¦       EstablishmentContact.cs
+¦   ¦       EstablishmentMember.cs
+¦   ¦       EstablishmentPhone.cs
+¦   ¦       EstablishmentSocialMedia.cs
+¦   ¦       
+¦   +---Exceptions
+¦   +---obj
+¦   ¦   ¦   project.assets.json
+¦   ¦   ¦   project.nuget.cache
+¦   ¦   ¦   TestNest.Admin.Domain.csproj.nuget.dgspec.json
+¦   ¦   ¦   TestNest.Admin.Domain.csproj.nuget.g.props
+¦   ¦   ¦   TestNest.Admin.Domain.csproj.nuget.g.targets
+¦   ¦   ¦   
+¦   ¦   +---Debug
+¦   ¦       +---net8.0
+¦   ¦           ¦   .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+¦   ¦           ¦   TestNest.1E4E1894.Up2Date
+¦   ¦           ¦   TestNest.Admin.Domain.AssemblyInfo.cs
+¦   ¦           ¦   TestNest.Admin.Domain.AssemblyInfoInputs.cache
+¦   ¦           ¦   TestNest.Admin.Domain.assets.cache
+¦   ¦           ¦   TestNest.Admin.Domain.csproj.AssemblyReference.cache
+¦   ¦           ¦   TestNest.Admin.Domain.csproj.BuildWithSkipAnalyzers
+¦   ¦           ¦   TestNest.Admin.Domain.csproj.CoreCompileInputs.cache
+¦   ¦           ¦   TestNest.Admin.Domain.csproj.FileListAbsolute.txt
+¦   ¦           ¦   TestNest.Admin.Domain.dll
+¦   ¦           ¦   TestNest.Admin.Domain.GeneratedMSBuildEditorConfig.editorconfig
+¦   ¦           ¦   TestNest.Admin.Domain.GlobalUsings.g.cs
+¦   ¦           ¦   TestNest.Admin.Domain.pdb
+¦   ¦           ¦   
+¦   ¦           +---ref
+¦   ¦           ¦       TestNest.Admin.Domain.dll
+¦   ¦           ¦       
+¦   ¦           +---refint
+¦   ¦                   TestNest.Admin.Domain.dll
+¦   ¦                   
+¦   +---SocialMedias
+¦           SocialMediaPlatform.cs
+¦           
++---TestNest.Admin.Infrastructure
+¦   ¦   InfrastructureRegistration.cs
+¦   ¦   TestNest.Admin.Infrastructure.csproj
+¦   ¦   
+¦   +---bin
+¦   ¦   +---Debug
+¦   ¦       +---net8.0
+¦   ¦               TestNest.Admin.Application.dll
+¦   ¦               TestNest.Admin.Application.pdb
+¦   ¦               TestNest.Admin.Domain.dll
+¦   ¦               TestNest.Admin.Domain.pdb
+¦   ¦               TestNest.Admin.Infrastructure.deps.json
+¦   ¦               TestNest.Admin.Infrastructure.dll
+¦   ¦               TestNest.Admin.Infrastructure.pdb
+¦   ¦               TestNest.Admin.Infrastructure.runtimeconfig.json
+¦   ¦               TestNest.Admin.SharedLibrary.dll
+¦   ¦               TestNest.Admin.SharedLibrary.pdb
+¦   ¦               
+¦   +---Migrations
+¦   ¦       20250418055840_initial_mig.cs
+¦   ¦       20250418055840_initial_mig.Designer.cs
+¦   ¦       20250418061413_AddShadowEstablishmentStatusId.cs
+¦   ¦       20250418061413_AddShadowEstablishmentStatusId.Designer.cs
+¦   ¦       20250418062514_AddShadowEstablishmentStatusIdAgain.cs
+¦   ¦       20250418062514_AddShadowEstablishmentStatusIdAgain.Designer.cs
+¦   ¦       20250418065249_AddShadowEstablishmentStatusIdAgain1.cs
+¦   ¦       20250418065249_AddShadowEstablishmentStatusIdAgain1.Designer.cs
+¦   ¦       20250422093704_RemoveRedundantAddressId.cs
+¦   ¦       20250422093704_RemoveRedundantAddressId.Designer.cs
+¦   ¦       20250422133706_AddCascadeDeleteOnEstablishmentAddress.cs
+¦   ¦       20250422133706_AddCascadeDeleteOnEstablishmentAddress.Designer.cs
+¦   ¦       20250423081057_change.cs
+¦   ¦       20250423081057_change.Designer.cs
+¦   ¦       ApplicationDbContextModelSnapshot.cs
+¦   ¦       
+¦   +---obj
+¦   ¦   ¦   project.assets.json
+¦   ¦   ¦   project.nuget.cache
+¦   ¦   ¦   TestNest.Admin.Infrastructure.csproj.EntityFrameworkCore.targets
+¦   ¦   ¦   TestNest.Admin.Infrastructure.csproj.nuget.dgspec.json
+¦   ¦   ¦   TestNest.Admin.Infrastructure.csproj.nuget.g.props
+¦   ¦   ¦   TestNest.Admin.Infrastructure.csproj.nuget.g.targets
+¦   ¦   ¦   
+¦   ¦   +---Debug
+¦   ¦       +---net8.0
+¦   ¦           ¦   .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+¦   ¦           ¦   TestNest.1D6D95D2.Up2Date
+¦   ¦           ¦   TestNest.Admin.Infrastructure.AssemblyInfo.cs
+¦   ¦           ¦   TestNest.Admin.Infrastructure.AssemblyInfoInputs.cache
+¦   ¦           ¦   TestNest.Admin.Infrastructure.assets.cache
+¦   ¦           ¦   TestNest.Admin.Infrastructure.csproj.AssemblyReference.cache
+¦   ¦           ¦   TestNest.Admin.Infrastructure.csproj.BuildWithSkipAnalyzers
+¦   ¦           ¦   TestNest.Admin.Infrastructure.csproj.CoreCompileInputs.cache
+¦   ¦           ¦   TestNest.Admin.Infrastructure.csproj.FileListAbsolute.txt
+¦   ¦           ¦   TestNest.Admin.Infrastructure.dll
+¦   ¦           ¦   TestNest.Admin.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+¦   ¦           ¦   TestNest.Admin.Infrastructure.genruntimeconfig.cache
+¦   ¦           ¦   TestNest.Admin.Infrastructure.GlobalUsings.g.cs
+¦   ¦           ¦   TestNest.Admin.Infrastructure.pdb
+¦   ¦           ¦   
+¦   ¦           +---ref
+¦   ¦           ¦       TestNest.Admin.Infrastructure.dll
+¦   ¦           ¦       
+¦   ¦           +---refint
+¦   ¦                   TestNest.Admin.Infrastructure.dll
+¦   ¦                   
+¦   +---Persistence
+¦       ¦   ApplicationDbContext.cs
+¦       ¦   
+¦       +---Common
+¦       ¦       SpecificationEvaluator.cs
+¦       ¦       
+¦       +---Configurations
+¦       ¦   ¦   EmployeeConfiguration.cs
+¦       ¦   ¦   EmployeeRoleConfiguration.cs
+¦       ¦   ¦   EstablishmentAddressConfiguration.cs
+¦       ¦   ¦   EstablishmentConfiguration.cs
+¦       ¦   ¦   EstablishmentContactConfiguration.cs
+¦       ¦   ¦   EstablishmentMemberConfiguration.cs
+¦       ¦   ¦   EstablishmentPhoneConfiguration.cs
+¦       ¦   ¦   EstablishmentSocialMediaConfiguration.cs
+¦       ¦   ¦   SocialMediaPlatformConfiguration.cs
+¦       ¦   ¦   
+¦       ¦   +---Common
+¦       ¦           StronglyTypedIdConfiguration.cs
+¦       ¦           
+¦       +---Repositories
+¦       ¦   ¦   EmployeeRepository.cs
+¦       ¦   ¦   EmployeeRoleRepository.cs
+¦       ¦   ¦   EstablishmentAddressRepository.cs
+¦       ¦   ¦   EstablishmentContactRepository.cs
+¦       ¦   ¦   EstablishmentMemberRepository.cs
+¦       ¦   ¦   EstablishmentPhoneRepository.cs
+¦       ¦   ¦   EstablishmentRepository.cs
+¦       ¦   ¦   SocialMediaPlatformRepository.cs
+¦       ¦   ¦   
+¦       ¦   +---Common
+¦       ¦           GenericRepository.cs
+¦       ¦           
+¦       +---UnitOfWork
+¦               UnitOfWork.cs
+¦               
++---TestNest.Admin.SharedLibrary
+¦   ¦   GlobalUsing.cs
+¦   ¦   TestNest.Admin.SharedLibrary.csproj
+¦   ¦   
+¦   +---bin
+¦   ¦   +---Debug
+¦   ¦       +---net8.0
+¦   ¦               TestNest.Admin.SharedLibrary.deps.json
+¦   ¦               TestNest.Admin.SharedLibrary.dll
+¦   ¦               TestNest.Admin.SharedLibrary.pdb
+¦   ¦               
+¦   +---Common
+¦   ¦   +---BaseEntity
+¦   ¦   ¦       AggregateRoot.cs
+¦   ¦   ¦       BaseEntity.cs
+¦   ¦   ¦       DomainEvent.cs
+¦   ¦   ¦       IAggregateRoot.cs
+¦   ¦   ¦       IDomainEvent.cs
+¦   ¦   ¦       
+¦   ¦   +---Guards
+¦   ¦   ¦       Guard.cs
+¦   ¦   ¦       
+¦   ¦   +---Options
+¦   ¦   ¦       Option.cs
+¦   ¦   ¦       
+¦   ¦   +---Results
+¦   ¦           Result.cs
+¦   ¦           
+¦   +---Dtos
+¦   ¦   +---Paginations
+¦   ¦   ¦       PaginatedLinks.cs
+¦   ¦   ¦       PaginatedResponse.cs
+¦   ¦   ¦       
+¦   ¦   +---Requests
+¦   ¦   ¦   +---Employee
+¦   ¦   ¦   ¦       EmployeeForCreationRequest.cs
+¦   ¦   ¦   ¦       EmployeeForUpdateRequest.cs
+¦   ¦   ¦   ¦       EmployeePatchRequest.cs
+¦   ¦   ¦   ¦       EmployeeRoleForCreationRequest.cs
+¦   ¦   ¦   ¦       EmployeeRoleForUpdateRequest.cs
+¦   ¦   ¦   ¦       
+¦   ¦   ¦   +---Establishment
+¦   ¦   ¦   ¦       EstablishmentAddressForCreationRequest.cs
+¦   ¦   ¦   ¦       EstablishmentAddressForUpdateRequest.cs
+¦   ¦   ¦   ¦       EstablishmentAddressPatchRequest.cs
+¦   ¦   ¦   ¦       EstablishmentContactForCreationRequest.cs
+¦   ¦   ¦   ¦       EstablishmentContactForUpdateRequest.cs
+¦   ¦   ¦   ¦       EstablishmentContactPatchRequest.cs
+¦   ¦   ¦   ¦       EstablishmentForCreationRequest.cs
+¦   ¦   ¦   ¦       EstablishmentForUpdateRequest.cs
+¦   ¦   ¦   ¦       EstablishmentMemberForCreationRequest.cs
+¦   ¦   ¦   ¦       EstablishmentMemberForUpdateRequest.cs
+¦   ¦   ¦   ¦       EstablishmentMemberPatchRequest.cs
+¦   ¦   ¦   ¦       EstablishmentPatchRequest.cs
+¦   ¦   ¦   ¦       EstablishmentPhoneForCreationRequest.cs
+¦   ¦   ¦   ¦       EstablishmentPhoneForUpdateRequest.cs
+¦   ¦   ¦   ¦       EstablishmentPhonePatchRequest.cs
+¦   ¦   ¦   ¦       
+¦   ¦   ¦   +---SocialMediaPlatform
+¦   ¦   ¦           SocialMediaPlatformForCreationRequest.cs
+¦   ¦   ¦           SocialMediaPlatformForUpdateRequest.cs
+¦   ¦   ¦           
+¦   ¦   +---Responses
+¦   ¦       ¦   EmployeeResponse.cs
+¦   ¦       ¦   EmployeeRoleResponse.cs
+¦   ¦       ¦   SocialMediaPlatformResponse.cs
+¦   ¦       ¦   
+¦   ¦       +---Establishments
+¦   ¦               EstablishmentAddressResponse.cs
+¦   ¦               EstablishmentContactResponse.cs
+¦   ¦               EstablishmentMemberResponse.cs
+¦   ¦               EstablishmentPhoneResponse.cs
+¦   ¦               EstablishmentResponse.cs
+¦   ¦               
+¦   +---Exceptions
+¦   ¦   ¦   AddressException.cs
+¦   ¦   ¦   EmailAddressException.cs
+¦   ¦   ¦   EmployeeException.cs
+¦   ¦   ¦   EmployeeNumberException.cs
+¦   ¦   ¦   EmployeeRoleException.cs
+¦   ¦   ¦   EmployeeStatusException.cs
+¦   ¦   ¦   EstablishmentAddressException.cs
+¦   ¦   ¦   EstablishmentException.cs
+¦   ¦   ¦   EstablishmentNameException.cs
+¦   ¦   ¦   EstablishmentStatusException.cs
+¦   ¦   ¦   IdValidationException.cs
+¦   ¦   ¦   MemberDescriptionException.cs
+¦   ¦   ¦   MemberTagException.cs
+¦   ¦   ¦   MemberTitleException.cs
+¦   ¦   ¦   PersonNameException.cs
+¦   ¦   ¦   PhoneNumberException.cs
+¦   ¦   ¦   ResultException.cs
+¦   ¦   ¦   RoleNameException.cs
+¦   ¦   ¦   SocialMediaAccountNameException.cs
+¦   ¦   ¦   SocialMediaNameException.cs
+¦   ¦   ¦   SocialMediaPlatformException.cs
+¦   ¦   ¦   StronglyTypedIdException.cs
+¦   ¦   ¦   
+¦   ¦   +---Common
+¦   ¦           Error.cs
+¦   ¦           ErrorType.cs
+¦   ¦           IErrorResponseService.cs
+¦   ¦           IHasErrorCode.cs
+¦   ¦           
+¦   +---Helpers
+¦   ¦       IdHelper.cs
+¦   ¦       
+¦   +---obj
+¦   ¦   ¦   project.assets.json
+¦   ¦   ¦   project.nuget.cache
+¦   ¦   ¦   TestNest.Admin.SharedLibrary.csproj.nuget.dgspec.json
+¦   ¦   ¦   TestNest.Admin.SharedLibrary.csproj.nuget.g.props
+¦   ¦   ¦   TestNest.Admin.SharedLibrary.csproj.nuget.g.targets
+¦   ¦   ¦   
+¦   ¦   +---Debug
+¦   ¦       +---net8.0
+¦   ¦           ¦   .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.AssemblyInfo.cs
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.AssemblyInfoInputs.cache
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.assets.cache
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.csproj.AssemblyReference.cache
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.csproj.BuildWithSkipAnalyzers
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.csproj.CoreCompileInputs.cache
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.csproj.FileListAbsolute.txt
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.dll
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.GeneratedMSBuildEditorConfig.editorconfig
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.GlobalUsings.g.cs
+¦   ¦           ¦   TestNest.Admin.SharedLibrary.pdb
+¦   ¦           ¦   
+¦   ¦           +---ref
+¦   ¦           ¦       TestNest.Admin.SharedLibrary.dll
+¦   ¦           ¦       
+¦   ¦           +---refint
+¦   ¦                   TestNest.Admin.SharedLibrary.dll
+¦   ¦                   
+¦   +---StronglyTypeIds
+¦   ¦   ¦   EmployeeId.cs
+¦   ¦   ¦   EmployeeRoleId.cs
+¦   ¦   ¦   EstablishmentAddressId.cs
+¦   ¦   ¦   EstablishmentContactId.cs
+¦   ¦   ¦   EstablishmentId.cs
+¦   ¦   ¦   EstablishmentMemberId.cs
+¦   ¦   ¦   EstablishmentPhoneId.cs
+¦   ¦   ¦   EstablishmentSocialMediaId.cs
+¦   ¦   ¦   SocialMediaId.cs
+¦   ¦   ¦   
+¦   ¦   +---Common
+¦   ¦           StronglyTypedId.cs
+¦   ¦           StronglyTypedIdJsonConverter.cs
+¦   ¦           StronglyTypedIdModelBinder.cs
+¦   ¦           
+¦   +---ValueObjects
+¦       ¦   Address.cs
+¦       ¦   EmailAddress.cs
+¦       ¦   EmployeeNumber.cs
+¦       ¦   EstablishmentName.cs
+¦       ¦   MemberDescription.cs
+¦       ¦   MemberTag.cs
+¦       ¦   MemberTitle.cs
+¦       ¦   PersonName.cs
+¦       ¦   PhoneNumber.cs
+¦       ¦   RoleName.cs
+¦       ¦   SocialMediaAccountName.cs
+¦       ¦   SocialMediaName.cs
+¦       ¦   
+¦       +---Common
+¦       ¦       ValueObject.cs
+¦       ¦       
+¦       +---Enums
+¦               EmployeeStatus.cs
+¦               EstablishmentStatus.cs
+¦               
++---TestNest.Admin.SharedLibrary.Test
+    ¦   TestNest.Admin.SharedLibrary.Test.csproj
+    ¦   
+    +---bin
+    ¦   +---Debug
+    ¦       +---net8.0
+    ¦           ¦   CoverletSourceRootsMapping_TestNest.Admin.SharedLibrary.Test
+    ¦           ¦   Microsoft.AspNetCore.Authentication.Abstractions.dll
+    ¦           ¦   Microsoft.AspNetCore.Authentication.Core.dll
+    ¦           ¦   Microsoft.AspNetCore.Authorization.dll
+    ¦           ¦   Microsoft.AspNetCore.Authorization.Policy.dll
+    ¦           ¦   Microsoft.AspNetCore.Hosting.Abstractions.dll
+    ¦           ¦   Microsoft.AspNetCore.Hosting.Server.Abstractions.dll
+    ¦           ¦   Microsoft.AspNetCore.Http.Abstractions.dll
+    ¦           ¦   Microsoft.AspNetCore.Http.dll
+    ¦           ¦   Microsoft.AspNetCore.Http.Extensions.dll
+    ¦           ¦   Microsoft.AspNetCore.Http.Features.dll
+    ¦           ¦   Microsoft.AspNetCore.Mvc.Abstractions.dll
+    ¦           ¦   Microsoft.AspNetCore.Mvc.Core.dll
+    ¦           ¦   Microsoft.AspNetCore.ResponseCaching.Abstractions.dll
+    ¦           ¦   Microsoft.AspNetCore.Routing.Abstractions.dll
+    ¦           ¦   Microsoft.AspNetCore.Routing.dll
+    ¦           ¦   Microsoft.AspNetCore.WebUtilities.dll
+    ¦           ¦   Microsoft.DotNet.PlatformAbstractions.dll
+    ¦           ¦   Microsoft.Extensions.Configuration.Abstractions.dll
+    ¦           ¦   Microsoft.Extensions.DependencyInjection.Abstractions.dll
+    ¦           ¦   Microsoft.Extensions.DependencyInjection.dll
+    ¦           ¦   Microsoft.Extensions.DependencyModel.dll
+    ¦           ¦   Microsoft.Extensions.Diagnostics.Abstractions.dll
+    ¦           ¦   Microsoft.Extensions.FileProviders.Abstractions.dll
+    ¦           ¦   Microsoft.Extensions.Hosting.Abstractions.dll
+    ¦           ¦   Microsoft.Extensions.Logging.Abstractions.dll
+    ¦           ¦   Microsoft.Extensions.ObjectPool.dll
+    ¦           ¦   Microsoft.Extensions.Options.dll
+    ¦           ¦   Microsoft.Extensions.Primitives.dll
+    ¦           ¦   Microsoft.Net.Http.Headers.dll
+    ¦           ¦   Microsoft.TestPlatform.CommunicationUtilities.dll
+    ¦           ¦   Microsoft.TestPlatform.CoreUtilities.dll
+    ¦           ¦   Microsoft.TestPlatform.CrossPlatEngine.dll
+    ¦           ¦   Microsoft.TestPlatform.PlatformAbstractions.dll
+    ¦           ¦   Microsoft.TestPlatform.Utilities.dll
+    ¦           ¦   Microsoft.VisualStudio.CodeCoverage.Shim.dll
+    ¦           ¦   Microsoft.VisualStudio.TestPlatform.Common.dll
+    ¦           ¦   Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
+    ¦           ¦   Newtonsoft.Json.dll
+    ¦           ¦   NuGet.Frameworks.dll
+    ¦           ¦   testhost.dll
+    ¦           ¦   testhost.exe
+    ¦           ¦   TestNest.Admin.SharedLibrary.dll
+    ¦           ¦   TestNest.Admin.SharedLibrary.pdb
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.deps.json
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.dll
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.pdb
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.runtimeconfig.json
+    ¦           ¦   xunit.abstractions.dll
+    ¦           ¦   xunit.assert.dll
+    ¦           ¦   xunit.core.dll
+    ¦           ¦   xunit.execution.dotnet.dll
+    ¦           ¦   xunit.runner.reporters.netcoreapp10.dll
+    ¦           ¦   xunit.runner.utility.netcoreapp10.dll
+    ¦           ¦   xunit.runner.visualstudio.dotnetcore.testadapter.dll
+    ¦           ¦   
+    ¦           +---cs
+    ¦           ¦       Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦           ¦       
+    ¦           +---de
+    ¦           ¦       Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦           ¦       
+    ¦           +---es
+    ¦           ¦       Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦           ¦       
+    ¦           +---fr
+    ¦           ¦       Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦           ¦       
+    ¦           +---it
+    ¦           ¦       Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦           ¦       
+    ¦           +---ja
+    ¦           ¦       Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦           ¦       
+    ¦           +---ko
+    ¦           ¦       Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦           ¦       
+    ¦           +---pl
+    ¦           ¦       Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦           ¦       
+    ¦           +---pt-BR
+    ¦           ¦       Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦           ¦       
+    ¦           +---ru
+    ¦           ¦       Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦           ¦       
+    ¦           +---tr
+    ¦           ¦       Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦           ¦       
+    ¦           +---zh-Hans
+    ¦           ¦       Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦           ¦       Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦           ¦       Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦           ¦       
+    ¦           +---zh-Hant
+    ¦                   Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+    ¦                   Microsoft.TestPlatform.CoreUtilities.resources.dll
+    ¦                   Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+    ¦                   Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+    ¦                   Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+    ¦                   
+    +---Common
+    ¦   +---BaseEntity
+    ¦   ¦       BaseEntityTests.cs
+    ¦   ¦       
+    ¦   +---Guards
+    ¦   ¦       GuardTests.cs
+    ¦   ¦       
+    ¦   +---Results
+    ¦           ResultTests.cs
+    ¦           
+    +---HelperTests
+    ¦       IdHelperTests.cs
+    ¦       
+    +---obj
+    ¦   ¦   project.assets.json
+    ¦   ¦   project.nuget.cache
+    ¦   ¦   TestNest.Admin.SharedLibrary.Test.csproj.nuget.dgspec.json
+    ¦   ¦   TestNest.Admin.SharedLibrary.Test.csproj.nuget.g.props
+    ¦   ¦   TestNest.Admin.SharedLibrary.Test.csproj.nuget.g.targets
+    ¦   ¦   
+    ¦   +---Debug
+    ¦       +---net8.0
+    ¦           ¦   .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+    ¦           ¦   TestNest.1DA4D4B7.Up2Date
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.AssemblyInfo.cs
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.AssemblyInfoInputs.cache
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.assets.cache
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.csproj.AssemblyReference.cache
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.csproj.BuildWithSkipAnalyzers
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.csproj.CoreCompileInputs.cache
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.csproj.FileListAbsolute.txt
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.dll
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.GeneratedMSBuildEditorConfig.editorconfig
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.genruntimeconfig.cache
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.GlobalUsings.g.cs
+    ¦           ¦   TestNest.Admin.SharedLibrary.Test.pdb
+    ¦           ¦   
+    ¦           +---ref
+    ¦           ¦       TestNest.Admin.SharedLibrary.Test.dll
+    ¦           ¦       
+    ¦           +---refint
+    ¦                   TestNest.Admin.SharedLibrary.Test.dll
+    ¦                   
+    +---StronglyTypeIdTest
+    ¦   ¦   EmployeeIdTests.cs
+    ¦   ¦   EmployeeRoleIdTests.cs
+    ¦   ¦   EstablishmentAddressIdTests.cs
+    ¦   ¦   EstablishmentContactIdTests.cs
+    ¦   ¦   EstablishmentIdTests.cs
+    ¦   ¦   EstablishmentMemberIdTests.cs
+    ¦   ¦   EstablishmentPhoneIdTests.cs
+    ¦   ¦   EstablishmentSocialMediaIdTests.cs
+    ¦   ¦   SocialMediaIdTests.cs
+    ¦   ¦   
+    ¦   +---Common
+    ¦           StronglyTypedIdTests.cs
+    ¦           
+    +---ValueObjectTests
+        ¦   AddressTests.cs
+        ¦   EmailAddressTests.cs
+        ¦   EmployeeNumberTests.cs
+        ¦   EstablishmentNameTests.cs
+        ¦   MemberDescriptionTests.cs
+        ¦   MemberTagTests.cs
+        ¦   MemberTitleTests.cs
+        ¦   PersonNameTests.cs
+        ¦   PhoneNumberTests.cs
+        ¦   RoleNameTests.cs
+        ¦   SocialMediaAccountNameTests.cs
+        ¦   SocialMediaNameTests.cs
+        ¦   
+        +---Enums
+                EmployeeStatusTests.cs
+                EstablishmentStatusTests.cs
+                
