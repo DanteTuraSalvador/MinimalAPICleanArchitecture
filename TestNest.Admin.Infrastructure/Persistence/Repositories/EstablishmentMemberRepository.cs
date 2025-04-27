@@ -11,7 +11,6 @@ using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 
 namespace TestNest.Admin.Infrastructure.Persistence.Repositories;
 
-
 public class EstablishmentMemberRepository(
     ApplicationDbContext establishmentMemberDbContext,
     ILogger<EstablishmentMemberRepository> logger)
@@ -49,7 +48,7 @@ public class EstablishmentMemberRepository(
     {
         try
         {
-            List<EstablishmentMember> members = await _establishmentMemberDbContext.EstablishmentMembers 
+            List<EstablishmentMember> members = await _establishmentMemberDbContext.EstablishmentMembers
                 .Include(x => x.MemberTitle)
                 .Include(x => x.MemberDescription)
                 .Include(x => x.MemberTag)
@@ -66,7 +65,7 @@ public class EstablishmentMemberRepository(
     {
         try
         {
-            _ = await _establishmentMemberDbContext.EstablishmentMembers.AddAsync(entity); 
+            _ = await _establishmentMemberDbContext.EstablishmentMembers.AddAsync(entity);
             return Result<EstablishmentMember>.Success(entity);
         }
         catch (Exception ex)
@@ -92,7 +91,7 @@ public class EstablishmentMemberRepository(
     {
         try
         {
-            EstablishmentMember? memberToDelete = await _establishmentMemberDbContext.EstablishmentMembers 
+            EstablishmentMember? memberToDelete = await _establishmentMemberDbContext.EstablishmentMembers
                 .FindAsync(id.Value);
             if (memberToDelete != null)
             {
@@ -108,7 +107,7 @@ public class EstablishmentMemberRepository(
     }
 
     public async Task<bool> ExistsAsync(EstablishmentMemberId id)
-        => await _establishmentMemberDbContext.EstablishmentMembers.AnyAsync(e => e.Id == id); 
+        => await _establishmentMemberDbContext.EstablishmentMembers.AnyAsync(e => e.Id == id);
 
     public Task DetachAsync(EstablishmentMember establishmentMember)
     {
@@ -121,7 +120,7 @@ public class EstablishmentMemberRepository(
         try
         {
             IQueryable<EstablishmentMember> query = SpecificationEvaluator<EstablishmentMember>
-                .GetQuery(_establishmentMemberDbContext.EstablishmentMembers, (BaseSpecification<EstablishmentMember>)spec); 
+                .GetQuery(_establishmentMemberDbContext.EstablishmentMembers, (BaseSpecification<EstablishmentMember>)spec);
             int count = await query.CountAsync();
             return Result<int>.Success(count);
         }
@@ -135,7 +134,7 @@ public class EstablishmentMemberRepository(
     {
         try
         {
-            IQueryable<EstablishmentMember> query = _establishmentMemberDbContext.EstablishmentMembers 
+            IQueryable<EstablishmentMember> query = _establishmentMemberDbContext.EstablishmentMembers
                 .Include(x => x.MemberTitle)
                 .Include(x => x.MemberDescription)
                 .Include(x => x.MemberTag)
@@ -158,7 +157,7 @@ public class EstablishmentMemberRepository(
     {
         try
         {
-            return await _establishmentMemberDbContext.EstablishmentMembers 
+            return await _establishmentMemberDbContext.EstablishmentMembers
                 .AnyAsync(em => em.EstablishmentId == establishmentId &&
                                  em.EmployeeId == employeeId &&
                                  em.Id != excludedId);

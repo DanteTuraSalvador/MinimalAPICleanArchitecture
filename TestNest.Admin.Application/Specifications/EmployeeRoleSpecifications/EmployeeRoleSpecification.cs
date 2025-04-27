@@ -46,6 +46,7 @@ public class EmployeeRoleSpecification : BaseSpecification<EmployeeRole>
                 case "rolename":
                     AddOrderBy(e => e.RoleName.Name, direction);
                     break;
+
                 case "id":
                 case "employeeroleid":
                 default:

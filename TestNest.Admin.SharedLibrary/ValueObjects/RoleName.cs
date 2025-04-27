@@ -63,5 +63,4 @@ public sealed partial class RoleName : ValueObject
     }
 
     public override string ToString() => Name;
- 
 }

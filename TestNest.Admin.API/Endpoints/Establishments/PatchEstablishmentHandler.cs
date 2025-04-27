@@ -1,10 +1,8 @@
-﻿using MapsterMapper;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
-using TestNest.Admin.Domain.Establishments;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Requests.Establishment;
 using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
@@ -14,11 +12,9 @@ using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 namespace TestNest.Admin.API.Endpoints.Establishments;
 
 public class PatchEstablishmentHandler(
-    IEstablishmentService establishmentService,
-    IMapper mapper)
+    IEstablishmentService establishmentService)
 {
     private readonly IEstablishmentService _establishmentService = establishmentService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         string establishmentId,
@@ -44,11 +40,11 @@ public class PatchEstablishmentHandler(
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, ErrorType.Validation, errors);
         }
 
-        Result<Establishment> result = await _establishmentService.PatchEstablishmentAsync(establishmentIdResult.Value!, establishmentPatchRequest);
+        Result<EstablishmentResponse> result = await _establishmentService.PatchEstablishmentAsync(establishmentIdResult.Value!, establishmentPatchRequest);
 
         if (result.IsSuccess)
         {
-            EstablishmentResponse dto = _mapper.Map<EstablishmentResponse>(result.Value!);
+            EstablishmentResponse dto = result.Value!;
             return Results.Ok(dto);
         }
 

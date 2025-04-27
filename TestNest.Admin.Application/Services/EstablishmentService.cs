@@ -4,11 +4,13 @@ using TestNest.Admin.Application.Contracts.Common;
 using TestNest.Admin.Application.Contracts.Interfaces.Persistence;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Interfaces;
+using TestNest.Admin.Application.Mappings;
 using TestNest.Admin.Application.Services.Base;
 using TestNest.Admin.Application.Specifications.Common;
 using TestNest.Admin.Domain.Establishments;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Requests.Establishment;
+using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
 using TestNest.Admin.SharedLibrary.Exceptions;
 using TestNest.Admin.SharedLibrary.Exceptions.Common;
 using TestNest.Admin.SharedLibrary.Helpers;
@@ -26,7 +28,7 @@ public class EstablishmentService(
 {
     private readonly IEstablishmentRepository _establishmentRepository = establishmentRepository;
 
-    public async Task<Result<Establishment>> CreateEstablishmentAsync(
+    public async Task<Result<EstablishmentResponse>> CreateEstablishmentAsync(
         EstablishmentForCreationRequest establishmentForCreationRequest)
     {
         using var scope = new TransactionScope(TransactionScopeOption.Required,
@@ -44,7 +46,7 @@ public class EstablishmentService(
 
         if (!combinedValidationResult.IsSuccess)
         {
-            return Result<Establishment>.Failure(
+            return Result<EstablishmentResponse>.Failure(
                 ErrorType.Validation,
                 [.. combinedValidationResult.Errors]);
         }
@@ -55,7 +57,7 @@ public class EstablishmentService(
 
         if (!uniquenessCheckResult.IsSuccess)
         {
-            return Result<Establishment>.Failure(
+            return Result<EstablishmentResponse>.Failure(
                 ErrorType.Conflict,
                 [.. uniquenessCheckResult.Errors]);
         }
@@ -66,7 +68,7 @@ public class EstablishmentService(
 
         if (!establishmentResult.IsSuccess)
         {
-            return Result<Establishment>.Failure(
+            return Result<EstablishmentResponse>.Failure(
                 ErrorType.Validation,
                 [.. establishmentResult.Errors]);
         }
@@ -79,12 +81,15 @@ public class EstablishmentService(
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<EstablishmentResponse>.Success(
+                establishment.ToEstablishmentResponse());
         }
-        return commitResult;
+        return Result<EstablishmentResponse>.Failure(
+            commitResult.ErrorType,
+            commitResult.Errors);
     }
 
-    public async Task<Result<Establishment>> UpdateEstablishmentAsync(
+    public async Task<Result<EstablishmentResponse>> UpdateEstablishmentAsync(
         EstablishmentId establishmentId,
         EstablishmentForUpdateRequest establishmentForUpdateRequest)
     {
@@ -96,7 +101,9 @@ public class EstablishmentService(
             .GetByIdAsync(establishmentId);
         if (!validatedEstablishment.IsSuccess)
         {
-            return validatedEstablishment;
+            return Result<EstablishmentResponse>.Failure(
+                 validatedEstablishment.ErrorType,
+                 validatedEstablishment.Errors);
         }
 
         Establishment establishment = validatedEstablishment.Value!;
@@ -111,7 +118,7 @@ public class EstablishmentService(
 
         if (!establishmentStatusResult.IsSuccess)
         {
-            return Result<Establishment>.Failure(
+            return Result<EstablishmentResponse>.Failure(
                 establishmentStatusResult.ErrorType,
                 establishmentStatusResult.Errors);
         }
@@ -123,7 +130,7 @@ public class EstablishmentService(
 
         if (!combinedValidationResult.IsSuccess)
         {
-            return Result<Establishment>.Failure(
+            return Result<EstablishmentResponse>.Failure(
                 ErrorType.Validation,
                 [.. combinedValidationResult.Errors]);
         }
@@ -135,7 +142,9 @@ public class EstablishmentService(
 
         if (!updatedEstablishmentResult.IsSuccess)
         {
-            return updatedEstablishmentResult;
+            return Result<EstablishmentResponse>.Failure(
+                ErrorType.Validation,
+                [.. updatedEstablishmentResult.Errors]);
         }
 
         Result<bool> uniquenessCheckResult = await EstablishmentCombinationExistsAsync(
@@ -145,7 +154,7 @@ public class EstablishmentService(
 
         if (!uniquenessCheckResult.IsSuccess)
         {
-            return Result<Establishment>.Failure(
+            return Result<EstablishmentResponse>.Failure(
                 ErrorType.Conflict,
                 [.. uniquenessCheckResult.Errors]);
         }
@@ -154,7 +163,7 @@ public class EstablishmentService(
             .UpdateAsync(updatedEstablishmentResult.Value!);
         if (!updateResult.IsSuccess)
         {
-            return Result<Establishment>.Failure(
+            return Result<EstablishmentResponse>.Failure(
                 updateResult.ErrorType,
                 updateResult.Errors);
         }
@@ -164,12 +173,15 @@ public class EstablishmentService(
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<EstablishmentResponse>.Success(
+                commitResult.Value!.ToEstablishmentResponse());
         }
-        return commitResult;
+        return Result<EstablishmentResponse>.Failure(
+            commitResult.ErrorType,
+            commitResult.Errors);
     }
 
-    public async Task<Result<Establishment>> PatchEstablishmentAsync(
+    public async Task<Result<EstablishmentResponse>> PatchEstablishmentAsync(
         EstablishmentId establishmentId,
         EstablishmentPatchRequest establishmentPatchRequest)
     {
@@ -181,7 +193,9 @@ public class EstablishmentService(
             .GetByIdAsync(establishmentId);
         if (!validatedEstablishment.IsSuccess)
         {
-            return validatedEstablishment;
+            return Result<EstablishmentResponse>.Failure(
+                 validatedEstablishment.ErrorType,
+                 validatedEstablishment.Errors);
         }
 
         Establishment establishment = validatedEstablishment.Value!;
@@ -193,7 +207,7 @@ public class EstablishmentService(
                 .Create(establishmentPatchRequest.EstablishmentName);
             if (!establishmentNameResult.IsSuccess)
             {
-                return Result<Establishment>.Failure(
+                return Result<EstablishmentResponse>.Failure(
                     establishmentNameResult.ErrorType,
                     establishmentNameResult.Errors);
             }
@@ -208,7 +222,7 @@ public class EstablishmentService(
                 .Create(establishmentPatchRequest.EmailAddress);
             if (!emailResult.IsSuccess)
             {
-                return Result<Establishment>.Failure(
+                return Result<EstablishmentResponse>.Failure(
                     emailResult.ErrorType,
                     emailResult.Errors);
             }
@@ -224,7 +238,7 @@ public class EstablishmentService(
                 .FromId(establishmentPatchRequest.EstablishmentStatus.Value);
             if (!newStatusResult.IsSuccess)
             {
-                return Result<Establishment>.Failure(
+                return Result<EstablishmentResponse>.Failure(
                     newStatusResult.ErrorType,
                     newStatusResult.Errors);
             }
@@ -234,7 +248,7 @@ public class EstablishmentService(
                 .ValidateTransition(currentStatus, newStatus!);
             if (!transitionResult.IsSuccess)
             {
-                return Result<Establishment>.Failure(
+                return Result<EstablishmentResponse>.Failure(
                     transitionResult.ErrorType,
                     transitionResult.Errors);
             }
@@ -252,7 +266,7 @@ public class EstablishmentService(
             if (!uniquenessCheckResult.IsSuccess)
             {
                 var exception = EstablishmentException.DuplicateResource();
-                return Result<Establishment>.Failure(ErrorType.Conflict,
+                return Result<EstablishmentResponse>.Failure(ErrorType.Conflict,
                     new Error(exception.Code.ToString(), exception.Message.ToString()));
             }
         }
@@ -261,7 +275,9 @@ public class EstablishmentService(
             .UpdateAsync(establishment);
         if (!updateResult.IsSuccess)
         {
-            return updateResult;
+            return Result<EstablishmentResponse>.Failure(
+                updateResult.ErrorType,
+                updateResult.Errors);
         }
 
         Result<Establishment> commitResult = await SafeCommitAsync(
@@ -269,10 +285,13 @@ public class EstablishmentService(
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<EstablishmentResponse>.Success(
+                commitResult.Value!.ToEstablishmentResponse());
         }
 
-        return commitResult;
+        return Result<EstablishmentResponse>.Failure(
+            commitResult.ErrorType,
+            commitResult.Errors);
     }
 
     public async Task<Result> DeleteEstablishmentAsync(EstablishmentId establishmentId)
@@ -288,7 +307,7 @@ public class EstablishmentService(
             return result;
         }
 
-        Result<bool> commitResult = await SafeCommitAsync<bool>(
+        Result<bool> commitResult = await SafeCommitAsync(
             () => Result<bool>.Success(true));
         if (commitResult.IsSuccess)
         {
@@ -332,9 +351,19 @@ public class EstablishmentService(
     public async Task<Result<int>> CountAsync(ISpecification<Establishment> spec)
         => await _establishmentRepository.CountAsync(spec);
 
-    public async Task<Result<Establishment>> GetEstablishmentByIdAsync(EstablishmentId establishmentId)
-        => await _establishmentRepository.GetByIdAsync(establishmentId);
+    public async Task<Result<EstablishmentResponse>> GetEstablishmentByIdAsync(EstablishmentId establishmentId)
+    {
+        Result<Establishment> establishmentResult = await _establishmentRepository.GetByIdAsync(establishmentId);
+        return establishmentResult.IsSuccess
+            ? Result<EstablishmentResponse>.Success(establishmentResult.Value!.ToEstablishmentResponse())
+            : Result<EstablishmentResponse>.Failure(establishmentResult.ErrorType, establishmentResult.Errors);
+    }
 
-    public async Task<Result<IEnumerable<Establishment>>> GetEstablishmentsAsync(ISpecification<Establishment> spec) 
-        => await _establishmentRepository.ListAsync(spec);
+    public async Task<Result<IEnumerable<EstablishmentResponse>>> GetEstablishmentsAsync(ISpecification<Establishment> spec)
+    {
+        Result<IEnumerable<Establishment>> establishmentsResult = await _establishmentRepository.ListAsync(spec);
+        return establishmentsResult.IsSuccess
+            ? Result<IEnumerable<EstablishmentResponse>>.Success(establishmentsResult.Value!.Select(e => e.ToEstablishmentResponse()))
+            : Result<IEnumerable<EstablishmentResponse>>.Failure(establishmentsResult.ErrorType, establishmentsResult.Errors);
+    }
 }

@@ -9,7 +9,7 @@
 * **Error Handling:** Provides consistent and structured error responses using standard HTTP status codes and `ProblemDetails` for easier debugging and integration, often leveraging a **Result Pattern** (`Result<T>`) to encapsulate operation outcomes with potential errors returned from the service layer.
 * **Asynchronous Operations:** Built with asynchronous operations throughout the API and service layer for improved performance and scalability.
 * **Data Transfer Objects (DTOs):** Utilizes DTOs to define clear contracts for request and response payloads, facilitating data transfer between the API and the service layer.
-* **Efficient Data Mapping:** Leverages a mapping library (e.g., Mapster) for streamlined object transformations between DTOs and domain entities (including **Value Objects**) within the service layer.
+* **Efficient Data Mapping:** Leverages a custom mapping for streamlined object transformations between DTOs and domain entities (including **Value Objects**) within the service layer.
 * **Well-Documented:** Designed with API documentation in mind, making it easy for developers to understand and integrate (likely using Swagger/OpenAPI).
 * **Pagination (for Collections):** Supports retrieving large datasets in manageable chunks with pagination parameters handled by the service layer and reflected in the API response.
 * **Filtering and Sorting (for Collections):** Offers options to filter and sort collections of resources, with the filtering and sorting logic often implemented using the **Specification Pattern** within the service layer to encapsulate query logic.

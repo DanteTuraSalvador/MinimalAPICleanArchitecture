@@ -1,9 +1,11 @@
 ﻿namespace TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
 
-public record EstablishmentMemberResponse(
-    string EstablishmentMemberId,
-    string EstablishmentId,
-    string EmployeeId,
-    string MemberTitle,
-    string MemberDescription,
-    string MemberTag);
+public class EstablishmentMemberResponse
+{
+    public string EstablishmentMemberId { get; set; }
+    public string EstablishmentId { get; set; }
+    public string EmployeeId { get; set; }
+    public string MemberTitle { get; set; }
+    public string MemberDescription { get; set; }
+    public string MemberTag { get; set; }
+}

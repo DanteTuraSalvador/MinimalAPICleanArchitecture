@@ -4,10 +4,12 @@ using TestNest.Admin.Application.Contracts.Common;
 using TestNest.Admin.Application.Contracts.Interfaces.Persistence;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Interfaces;
+using TestNest.Admin.Application.Mappings;
 using TestNest.Admin.Application.Services.Base;
 using TestNest.Admin.Application.Specifications.Common;
 using TestNest.Admin.Domain.SocialMedias;
 using TestNest.Admin.SharedLibrary.Common.Results;
+using TestNest.Admin.SharedLibrary.Dtos.Requests;
 using TestNest.Admin.SharedLibrary.Dtos.Requests.SocialMediaPlatform;
 using TestNest.Admin.SharedLibrary.Exceptions;
 using TestNest.Admin.SharedLibrary.Exceptions.Common;
@@ -24,7 +26,7 @@ public class SocialMediaPlatformService(
 {
     private readonly ISocialMediaPlatformRepository _socialMediaRepository = socialMediaRepository;
 
-    public async Task<Result<SocialMediaPlatform>> CreateSocialMediaPlatformAsync(
+    public async Task<Result<SocialMediaPlatformResponse>> CreateSocialMediaPlatformAsync(
         SocialMediaPlatformForCreationRequest socialMediaPlatformForCreationRequest)
     {
         using var scope = new TransactionScope(TransactionScopeOption.Required,
@@ -37,7 +39,7 @@ public class SocialMediaPlatformService(
 
         if (!socialMediaNameResult.IsSuccess)
         {
-            return Result<SocialMediaPlatform>.Failure(
+            return Result<SocialMediaPlatformResponse>.Failure(
                 ErrorType.Validation,
                 [.. socialMediaNameResult.Errors]);
         }
@@ -48,7 +50,7 @@ public class SocialMediaPlatformService(
         if (existingPlatformResult.IsSuccess)
         {
             var exception = SocialMediaPlatformException.DuplicateResource();
-            return Result<SocialMediaPlatform>.Failure(
+            return Result<SocialMediaPlatformResponse>.Failure(
                 ErrorType.Conflict,
                 new Error(exception.Code.ToString(), exception.Message.ToString()));
         }
@@ -58,7 +60,7 @@ public class SocialMediaPlatformService(
 
         if (!socialMediaPlatformResult.IsSuccess)
         {
-            return Result<SocialMediaPlatform>.Failure(
+            return Result<SocialMediaPlatformResponse>.Failure(
                 ErrorType.Validation,
                 [.. socialMediaPlatformResult.Errors]);
         }
@@ -71,14 +73,17 @@ public class SocialMediaPlatformService(
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<SocialMediaPlatformResponse>.Success(
+                commitResult.Value!.ToSocialMediaPlatformResponse());
         }
-        return commitResult;
+        return Result<SocialMediaPlatformResponse>.Failure(
+            commitResult.ErrorType,
+            commitResult.Errors);
     }
 
-    public async Task<Result<SocialMediaPlatform>> UpdateSocialMediaPlatformAsync(
-        SocialMediaId socialMediaId,
-        SocialMediaPlatformForUpdateRequest socialMediaPlatformUpdateDto)
+    public async Task<Result<SocialMediaPlatformResponse>> UpdateSocialMediaPlatformAsync(
+     SocialMediaId socialMediaId,
+     SocialMediaPlatformForUpdateRequest socialMediaPlatformUpdateDto)
     {
         using var scope = new TransactionScope(TransactionScopeOption.Required,
             new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
@@ -87,7 +92,9 @@ public class SocialMediaPlatformService(
         Result<SocialMediaPlatform> validatedSocialMediaPlatform = await _socialMediaRepository.GetByIdAsync(socialMediaId);
         if (!validatedSocialMediaPlatform.IsSuccess)
         {
-            return validatedSocialMediaPlatform;
+            return Result<SocialMediaPlatformResponse>.Failure(
+                validatedSocialMediaPlatform.ErrorType,
+                validatedSocialMediaPlatform.Errors);
         }
 
         SocialMediaPlatform socialMediaPlatform = validatedSocialMediaPlatform.Value!;
@@ -99,9 +106,9 @@ public class SocialMediaPlatformService(
 
         if (!socialMediaName.IsSuccess)
         {
-            return Result<SocialMediaPlatform>.Failure(
+            return Result<SocialMediaPlatformResponse>.Failure(
                 ErrorType.Validation,
-                socialMediaName.Errors.ToArray());
+                [.. socialMediaName.Errors]);
         }
 
         Result<SocialMediaPlatform> updatedSocialMediaPlatformResult = socialMediaPlatform
@@ -109,25 +116,30 @@ public class SocialMediaPlatformService(
 
         if (!updatedSocialMediaPlatformResult.IsSuccess)
         {
-            return updatedSocialMediaPlatformResult;
+            return Result<SocialMediaPlatformResponse>.Failure(updatedSocialMediaPlatformResult.ErrorType, updatedSocialMediaPlatformResult.Errors);
         }
 
         Result<SocialMediaPlatform> updateResult = await _socialMediaRepository
             .UpdateAsync(updatedSocialMediaPlatformResult.Value!);
         if (!updateResult.IsSuccess)
         {
-            return Result<SocialMediaPlatform>.Failure(
+            return Result<SocialMediaPlatformResponse>.Failure(
                 updateResult.ErrorType,
                 updateResult.Errors);
         }
 
-        Result commitResult = await SafeCommitAsync();
+        Result<SocialMediaPlatform> commitResult = await SafeCommitAsync(
+            () => updateResult);
+
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return Result<SocialMediaPlatform>.Success(updatedSocialMediaPlatformResult.Value!);
+            return Result<SocialMediaPlatformResponse>.Success(
+                commitResult.Value!.ToSocialMediaPlatformResponse());
         }
-        return Result<SocialMediaPlatform>.Failure(commitResult.ErrorType, commitResult.Errors);
+        return Result<SocialMediaPlatformResponse>.Failure(
+            commitResult.ErrorType,
+            commitResult.Errors);
     }
 
     public async Task<Result> DeleteSocialMediaPlatformAsync(SocialMediaId socialMediaId)
@@ -139,7 +151,8 @@ public class SocialMediaPlatformService(
             return result;
         }
 
-        Result commitResult = await SafeCommitAsync();
+        Result<bool> commitResult = await SafeCommitAsync(
+            () => result.IsSuccess ? Result<bool>.Success(true) : Result<bool>.Failure(result.ErrorType, result.Errors));
         if (commitResult.IsSuccess)
         {
             scope.Complete();
@@ -148,14 +161,26 @@ public class SocialMediaPlatformService(
         return Result.Failure(commitResult.ErrorType, commitResult.Errors);
     }
 
-    public async Task<Result<SocialMediaPlatform>> GetSocialMediaPlatformByIdAsync(SocialMediaId socialMediaId)
-        => await _socialMediaRepository.GetByIdAsync(socialMediaId);
+    public async Task<Result<SocialMediaPlatformResponse>> GetSocialMediaPlatformByIdAsync(SocialMediaId socialMediaId)
+    {
+        Result<SocialMediaPlatform> platformResult = await _socialMediaRepository.GetByIdAsync(socialMediaId);
+        if (!platformResult.IsSuccess)
+        {
+            return Result<SocialMediaPlatformResponse>.Failure(platformResult.ErrorType, platformResult.Errors);
+        }
+        return Result<SocialMediaPlatformResponse>.Success(platformResult.Value!.ToSocialMediaPlatformResponse());
+    }
 
-    public async Task<Result<IEnumerable<SocialMediaPlatform>>> GetAllSocialMediaPlatformsAsync()
-        => await _socialMediaRepository.GetAllAsync();
-
-    public async Task<Result<IEnumerable<SocialMediaPlatform>>> GetAllSocialMediaPlatformsAsync(ISpecification<SocialMediaPlatform> spec)
-        => await _socialMediaRepository.ListAsync(spec);
+    public async Task<Result<IEnumerable<SocialMediaPlatformResponse>>> GetAllSocialMediaPlatformsAsync(ISpecification<SocialMediaPlatform> spec)
+    {
+        Result<IEnumerable<SocialMediaPlatform>> platformsResult = await _socialMediaRepository.ListAsync(spec);
+        if (!platformsResult.IsSuccess)
+        {
+            return Result<IEnumerable<SocialMediaPlatformResponse>>.Failure(platformsResult.ErrorType, platformsResult.Errors);
+        }
+        IEnumerable<SocialMediaPlatformResponse> platformResponses = platformsResult.Value!.Select(p => p.ToSocialMediaPlatformResponse());
+        return Result<IEnumerable<SocialMediaPlatformResponse>>.Success(platformResponses);
+    }
 
     public async Task<Result<int>> CountAsync(ISpecification<SocialMediaPlatform> spec)
         => await _socialMediaRepository.CountAsync(spec);

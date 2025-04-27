@@ -5,6 +5,7 @@ using TestNest.Admin.SharedLibrary.Dtos.Requests.Establishment;
 using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
 
 namespace TestNest.Admin.API.Endpoints.EstablishmentAddresses;
+
 public static class EstablishmentAddressEndpoints
 {
     public static void MapEstablishmentAddressApi(this IEndpointRouteBuilder app)
@@ -71,7 +72,7 @@ public static class EstablishmentAddressEndpoints
             await handler.HandleAsync(paginationRequest, httpContext, sortBy, sortOrder, establishmentId, establishmentAddressId, city, municipality, province, region, isPrimary))
             .WithName("GetEstablishmentAddresses")
             .Produces<PaginatedResponse<EstablishmentAddressResponse>>(StatusCodes.Status200OK)
-            .Produces<EstablishmentAddressResponse>(StatusCodes.Status200OK) 
+            .Produces<EstablishmentAddressResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status500InternalServerError)

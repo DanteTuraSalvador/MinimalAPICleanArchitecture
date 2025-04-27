@@ -1,7 +1,7 @@
-﻿using TestNest.Admin.SharedLibrary.Dtos.Paginations;
-using TestNest.Admin.SharedLibrary.Dtos.Requests.SocialMediaPlatform;
+﻿using Microsoft.AspNetCore.Mvc;
+using TestNest.Admin.SharedLibrary.Dtos.Paginations;
 using TestNest.Admin.SharedLibrary.Dtos.Requests;
-using Microsoft.AspNetCore.Mvc;
+using TestNest.Admin.SharedLibrary.Dtos.Requests.SocialMediaPlatform;
 
 namespace TestNest.Admin.API.Endpoints.SocialMediaPlatforms;
 
@@ -64,7 +64,7 @@ public static class SocialMediaPlatformEndpoints
             await handler.HandleAsync(paginationRequest, httpContext, sortBy, sortOrder, name, platformURL, socialMediaId))
             .WithName("GetSocialMediaPlatforms")
             .Produces<PaginatedResponse<SocialMediaPlatformResponse>>(StatusCodes.Status200OK)
-            .Produces<SocialMediaPlatformResponse>(StatusCodes.Status200OK) 
+            .Produces<SocialMediaPlatformResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status500InternalServerError)

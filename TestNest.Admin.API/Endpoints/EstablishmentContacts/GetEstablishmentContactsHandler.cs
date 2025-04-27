@@ -1,8 +1,6 @@
-﻿using MapsterMapper;
-using TestNest.Admin.API.Helpers;
+﻿using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Specifications.EstablishmentContactSpecifications;
-using TestNest.Admin.Domain.Establishments;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Paginations;
 using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
@@ -12,11 +10,9 @@ using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 namespace TestNest.Admin.API.Endpoints.EstablishmentContacts;
 
 public class GetEstablishmentContactsHandler(
-    IEstablishmentContactService establishmentContactService,
-    IMapper mapper)
+    IEstablishmentContactService establishmentContactService)
 {
     private readonly IEstablishmentContactService _establishmentContactService = establishmentContactService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         [AsParameters] PaginationRequest paginationRequest,
@@ -55,11 +51,11 @@ public class GetEstablishmentContactsHandler(
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, contactIdResult.ErrorType, contactIdResult.Errors);
         }
 
-        Result<EstablishmentContact> result = await _establishmentContactService
+        Result<EstablishmentContactResponse> result = await _establishmentContactService
             .GetEstablishmentContactByIdAsync(contactIdResult.Value!);
 
         return result.IsSuccess && result.Value != null
-            ? Results.Ok(_mapper.Map<EstablishmentContactResponse>(result.Value))
+            ? Results.Ok(result.Value)
             : MinimalApiErrorHelper.HandleErrorResponse(httpContext, ErrorType.NotFound, [new Error("NotFound", $"Establishment contact with ID '{establishmentContactId}' not found.")]);
     }
 
@@ -95,19 +91,19 @@ public class GetEstablishmentContactsHandler(
         }
         int totalCount = countResult.Value;
 
-        Result<IEnumerable<EstablishmentContact>> contactsResult = await _establishmentContactService.GetEstablishmentContactsAsync(spec);
+        Result<IEnumerable<EstablishmentContactResponse>> contactsResult = await _establishmentContactService.GetEstablishmentContactsAsync(spec);
         if (!contactsResult.IsSuccess)
         {
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, contactsResult.ErrorType, contactsResult.Errors);
         }
-        IEnumerable<EstablishmentContact> contacts = contactsResult.Value!;
+        IEnumerable<EstablishmentContactResponse> contacts = contactsResult.Value!;
 
         if (contacts == null || !contacts.Any())
         {
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, ErrorType.NotFound, [new Error("NotFound", "No establishment contacts found matching the criteria.")]);
         }
 
-        IEnumerable<EstablishmentContactResponse> responseData = _mapper.Map<IEnumerable<EstablishmentContactResponse>>(contacts);
+        IEnumerable<EstablishmentContactResponse> responseData = contacts;
 
         int totalPages = (int)Math.Ceiling((double)totalCount / (paginationRequest.PageSize ?? 10));
 

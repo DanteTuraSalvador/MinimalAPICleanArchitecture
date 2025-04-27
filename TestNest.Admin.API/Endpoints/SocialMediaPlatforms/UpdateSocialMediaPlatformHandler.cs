@@ -1,11 +1,9 @@
-﻿using MapsterMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
-using TestNest.Admin.Domain.SocialMedias;
 using TestNest.Admin.SharedLibrary.Common.Results;
-using TestNest.Admin.SharedLibrary.Dtos.Requests.SocialMediaPlatform;
 using TestNest.Admin.SharedLibrary.Dtos.Requests;
+using TestNest.Admin.SharedLibrary.Dtos.Requests.SocialMediaPlatform;
 using TestNest.Admin.SharedLibrary.Exceptions.Common;
 using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 
@@ -13,11 +11,9 @@ namespace TestNest.Admin.API.Endpoints.SocialMediaPlatforms;
 
 public class UpdateSocialMediaPlatformHandler(
     ISocialMediaPlatformService socialMediaPlatformService,
-    IMapper mapper,
     IErrorResponseService errorResponseService)
 {
     private readonly ISocialMediaPlatformService _socialMediaPlatformService = socialMediaPlatformService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         string socialMediaId,
@@ -30,12 +26,12 @@ public class UpdateSocialMediaPlatformHandler(
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, socialMediaIdResult.ErrorType, socialMediaIdResult.Errors);
         }
 
-        Result<SocialMediaPlatform> result = await _socialMediaPlatformService
+        Result<SocialMediaPlatformResponse> result = await _socialMediaPlatformService
             .UpdateSocialMediaPlatformAsync(socialMediaIdResult.Value!, request);
 
         if (result.IsSuccess)
         {
-            SocialMediaPlatformResponse dto = _mapper.Map<SocialMediaPlatformResponse>(result.Value!);
+            SocialMediaPlatformResponse dto = result.Value!;
             return Results.Ok(dto);
         }
 

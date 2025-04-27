@@ -1,7 +1,6 @@
 ﻿using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.SharedLibrary.Common.Results;
-using TestNest.Admin.SharedLibrary.Exceptions.Common;
 using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 
 namespace TestNest.Admin.API.Endpoints.EstablishmentContacts;

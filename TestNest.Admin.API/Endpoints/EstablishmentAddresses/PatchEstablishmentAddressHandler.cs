@@ -1,10 +1,8 @@
-﻿using MapsterMapper;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
-using TestNest.Admin.Domain.Establishments;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Requests.Establishment;
 using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
@@ -14,11 +12,9 @@ using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 namespace TestNest.Admin.API.Endpoints.EstablishmentAddresses;
 
 public class PatchEstablishmentAddressHandler(
-    IEstablishmentAddressService establishmentAddressService,
-    IMapper mapper)
+    IEstablishmentAddressService establishmentAddressService)
 {
     private readonly IEstablishmentAddressService _establishmentAddressService = establishmentAddressService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         string establishmentAddressId,
@@ -45,12 +41,12 @@ public class PatchEstablishmentAddressHandler(
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, ErrorType.Validation, errors);
         }
 
-        Result<EstablishmentAddress> patchedAddress = await _establishmentAddressService
+        Result<EstablishmentAddressResponse> patchedAddress = await _establishmentAddressService
             .PatchEstablishmentAddressAsync(addressIdResult.Value!, addressPatchRequest);
 
         if (patchedAddress.IsSuccess)
         {
-            return Results.Ok(_mapper.Map<EstablishmentAddressResponse>(patchedAddress.Value!));
+            return Results.Ok(patchedAddress.Value!);
         }
 
         return MinimalApiErrorHelper.HandleErrorResponse(httpContext, patchedAddress.ErrorType, patchedAddress.Errors);

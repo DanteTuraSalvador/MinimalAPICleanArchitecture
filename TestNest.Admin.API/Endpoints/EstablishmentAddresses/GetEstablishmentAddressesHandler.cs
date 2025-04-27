@@ -1,8 +1,6 @@
-﻿using MapsterMapper;
-using TestNest.Admin.API.Helpers;
+﻿using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Specifications.EstablishmentAddressesSpecifications;
-using TestNest.Admin.Domain.Establishments;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Paginations;
 using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
@@ -12,11 +10,9 @@ using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 namespace TestNest.Admin.API.Endpoints.EstablishmentAddresses;
 
 public class GetEstablishmentAddressesHandler(
-    IEstablishmentAddressService establishmentAddressService,
-    IMapper mapper)
+    IEstablishmentAddressService establishmentAddressService)
 {
     private readonly IEstablishmentAddressService _establishmentAddressService = establishmentAddressService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         [AsParameters] PaginationRequest paginationRequest,
@@ -55,11 +51,11 @@ public class GetEstablishmentAddressesHandler(
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, addressIdResult.ErrorType, addressIdResult.Errors);
         }
 
-        Result<EstablishmentAddress> result = await _establishmentAddressService
+        Result<EstablishmentAddressResponse> result = await _establishmentAddressService
             .GetEstablishmentAddressByIdAsync(addressIdResult.Value!);
 
         return result.IsSuccess && result.Value != null
-            ? Results.Ok(_mapper.Map<EstablishmentAddressResponse>(result.Value))
+            ? Results.Ok(result.Value)
             : MinimalApiErrorHelper.HandleErrorResponse(httpContext, ErrorType.NotFound, [new Error("NotFound", $"Establishment address with ID '{establishmentAddressId}' not found.")]);
     }
 
@@ -95,19 +91,19 @@ public class GetEstablishmentAddressesHandler(
         }
         int totalCount = countResult.Value;
 
-        Result<IEnumerable<EstablishmentAddress>> addressesResult = await _establishmentAddressService.ListAsync(spec);
+        Result<IEnumerable<EstablishmentAddressResponse>> addressesResult = await _establishmentAddressService.ListAsync(spec);
         if (!addressesResult.IsSuccess)
         {
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, addressesResult.ErrorType, addressesResult.Errors);
         }
-        IEnumerable<EstablishmentAddress> addresses = addressesResult.Value!;
+        IEnumerable<EstablishmentAddressResponse> addresses = addressesResult.Value!;
 
         if (addresses == null || !addresses.Any())
         {
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, ErrorType.NotFound, [new Error("NotFound", "No establishment addresses found matching the criteria.")]);
         }
 
-        IEnumerable<EstablishmentAddressResponse> responseData = _mapper.Map<IEnumerable<EstablishmentAddressResponse>>(addresses);
+        IEnumerable<EstablishmentAddressResponse> responseData = addresses;
 
         int totalPages = (int)Math.Ceiling((double)totalCount / (paginationRequest.PageSize ?? 10));
 

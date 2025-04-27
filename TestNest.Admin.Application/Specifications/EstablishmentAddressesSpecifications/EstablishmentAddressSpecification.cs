@@ -21,7 +21,7 @@ public class EstablishmentAddressSpecification : BaseSpecification<Establishment
         string province = null,
         string region = null,
         string establishmentAddressId = null,
-        bool? isPrimary = null) 
+        bool? isPrimary = null)
     {
         var spec = new BaseSpecification<EstablishmentAddress>();
 

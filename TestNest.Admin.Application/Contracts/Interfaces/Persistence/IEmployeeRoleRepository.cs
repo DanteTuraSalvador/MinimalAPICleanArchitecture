@@ -28,7 +28,6 @@ namespace TestNest.Admin.Application.Contracts.Interfaces.Persistence;
 //    Task<bool> RoleIdExists(EmployeeRoleId roleId); // called by EmployeeService
 //}
 
-
 public interface IEmployeeRoleRepository : IGenericRepository<EmployeeRole, EmployeeRoleId>
 {
     Task<Result<EmployeeRole>> GetEmployeeRoleByNameAsync(string roleName);

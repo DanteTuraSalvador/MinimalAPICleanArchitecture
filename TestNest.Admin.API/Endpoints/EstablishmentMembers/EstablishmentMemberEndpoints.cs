@@ -85,7 +85,7 @@ public static class EstablishmentMemberEndpoints
             await handler.HandleAsync(paginationRequest, httpContext, sortBy, sortOrder, establishmentMemberId, establishmentId, employeeId, memberTitle, memberDescription, memberTag))
             .WithName("GetEstablishmentMembers")
             .Produces<PaginatedResponse<EstablishmentMemberResponse>>(StatusCodes.Status200OK)
-            .Produces<EstablishmentMemberResponse>(StatusCodes.Status200OK) 
+            .Produces<EstablishmentMemberResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status500InternalServerError)

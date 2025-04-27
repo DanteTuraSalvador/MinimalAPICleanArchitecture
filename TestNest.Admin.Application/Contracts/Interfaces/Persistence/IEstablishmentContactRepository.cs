@@ -34,8 +34,6 @@ namespace TestNest.Admin.Application.Contracts.Interfaces.Persistence;
 //        EstablishmentId establishmentId);
 //}
 
-
-
 public interface IEstablishmentContactRepository : IGenericRepository<EstablishmentContact, EstablishmentContactId>
 {
     Task<Result> SetNonPrimaryForEstablishmentContanctAsync(EstablishmentId establishmentId, EstablishmentContactId excludeEstablishmentContactId);

@@ -4,11 +4,13 @@ using TestNest.Admin.Application.Contracts.Common;
 using TestNest.Admin.Application.Contracts.Interfaces.Persistence;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Interfaces;
+using TestNest.Admin.Application.Mappings;
 using TestNest.Admin.Application.Services.Base;
 using TestNest.Admin.Application.Specifications.Common;
 using TestNest.Admin.Domain.Employees;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Requests.Employee;
+using TestNest.Admin.SharedLibrary.Dtos.Responses;
 using TestNest.Admin.SharedLibrary.Exceptions;
 using TestNest.Admin.SharedLibrary.Exceptions.Common;
 using TestNest.Admin.SharedLibrary.StronglyTypeIds;
@@ -24,7 +26,7 @@ public class EmployeeRoleService(
 {
     private readonly IEmployeeRoleRepository _employeeRoleRepository = employeeRoleRepository;
 
-    public async Task<Result<EmployeeRole>> CreateEmployeeRoleAsync(
+    public async Task<Result<EmployeeRoleResponse>> CreateEmployeeRoleAsync(
         EmployeeRoleForCreationRequest employeeRoleForCreationRequest)
     {
         using var scope = new TransactionScope(TransactionScopeOption.Required,
@@ -34,7 +36,7 @@ public class EmployeeRoleService(
 
         if (!roleNameResult.IsSuccess)
         {
-            return Result<EmployeeRole>.Failure(
+            return Result<EmployeeRoleResponse>.Failure(
                 ErrorType.Validation,
                 [.. roleNameResult.Errors]);
         }
@@ -45,7 +47,7 @@ public class EmployeeRoleService(
         if (existingRoleResult.IsSuccess)
         {
             var exception = EmployeeRoleException.DuplicateResource();
-            return Result<EmployeeRole>.Failure(
+            return Result<EmployeeRoleResponse>.Failure(
                 ErrorType.Conflict,
                 new Error(exception.Code.ToString(),
                     exception.Message.ToString()));
@@ -55,7 +57,7 @@ public class EmployeeRoleService(
 
         if (!employeeRoleResult.IsSuccess)
         {
-            return Result<EmployeeRole>.Failure(
+            return Result<EmployeeRoleResponse>.Failure(
                 ErrorType.Validation,
                 [.. employeeRoleResult.Errors]);
         }
@@ -68,12 +70,15 @@ public class EmployeeRoleService(
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<EmployeeRoleResponse>.Success(
+                commitResult.Value!.ToEmployeeRoleResponse());
         }
-        return commitResult;
+        return Result<EmployeeRoleResponse>.Failure(
+            commitResult.ErrorType,
+            commitResult.Errors);
     }
 
-    public async Task<Result<EmployeeRole>> UpdateEmployeeRoleAsync(
+    public async Task<Result<EmployeeRoleResponse>> UpdateEmployeeRoleAsync(
         EmployeeRoleId employeeRoleId,
         EmployeeRoleForUpdateRequest employeeRoleForUpdateRequest)
     {
@@ -84,7 +89,9 @@ public class EmployeeRoleService(
             .GetByIdAsync(employeeRoleId);
         if (!validatedEmployeeRole.IsSuccess)
         {
-            return validatedEmployeeRole;
+            return Result<EmployeeRoleResponse>.Failure(
+                validatedEmployeeRole.ErrorType,
+                [.. validatedEmployeeRole.Errors]);
         }
 
         EmployeeRole employeeRole = validatedEmployeeRole.Value!;
@@ -94,7 +101,7 @@ public class EmployeeRoleService(
 
         if (!roleName.IsSuccess)
         {
-            return Result<EmployeeRole>.Failure(
+            return Result<EmployeeRoleResponse>.Failure(
                 ErrorType.Validation,
                 [.. roleName.Errors]);
         }
@@ -103,20 +110,22 @@ public class EmployeeRoleService(
         if (existingRoleResult.IsSuccess && existingRoleResult.Value!.Id != employeeRoleId)
         {
             var exception = EmployeeRoleException.DuplicateResource();
-            return Result<EmployeeRole>.Failure(ErrorType.Conflict, new Error(exception.Code.ToString(), exception.Message.ToString()));
+            return Result<EmployeeRoleResponse>.Failure(ErrorType.Conflict, new Error(exception.Code.ToString(), exception.Message.ToString()));
         }
 
         Result<EmployeeRole> updatedEmployeeRoleResult = employeeRole.WithRoleName(roleName.Value!);
 
         if (!updatedEmployeeRoleResult.IsSuccess)
         {
-            return updatedEmployeeRoleResult;
+            return Result<EmployeeRoleResponse>.Failure(
+                updatedEmployeeRoleResult.ErrorType,
+                [.. updatedEmployeeRoleResult.Errors]);
         }
 
         Result<EmployeeRole> updateResult = await _employeeRoleRepository.UpdateAsync(updatedEmployeeRoleResult.Value!);
         if (!updateResult.IsSuccess)
         {
-            return Result<EmployeeRole>.Failure(updateResult.ErrorType, updateResult.Errors);
+            return Result<EmployeeRoleResponse>.Failure(updateResult.ErrorType, updateResult.Errors);
         }
 
         Result<EmployeeRole> commitResult = await SafeCommitAsync(
@@ -125,9 +134,9 @@ public class EmployeeRoleService(
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<EmployeeRoleResponse>.Failure(commitResult.ErrorType, [.. commitResult.Errors]);
         }
-        return commitResult;
+        return Result<EmployeeRoleResponse>.Failure(commitResult.ErrorType, [.. commitResult.Errors]);
     }
 
     public async Task<Result> DeleteEmployeeRoleAsync(EmployeeRoleId employeeRoleId)
@@ -151,15 +160,30 @@ public class EmployeeRoleService(
         return Result.Failure(commitResult.ErrorType, commitResult.Errors);
     }
 
-    public async Task<Result<EmployeeRole>> GetEmployeeRoleByIdAsync(EmployeeRoleId employeeRoleId)
-        => await _employeeRoleRepository.GetByIdAsync(employeeRoleId);
+    public async Task<Result<EmployeeRoleResponse>> GetEmployeeRoleByIdAsync(EmployeeRoleId employeeRoleId)
+    {
+        Result<EmployeeRole> employeeRoleResult = await _employeeRoleRepository.GetByIdAsync(employeeRoleId);
+        if (employeeRoleResult.IsSuccess)
+        {
+            return Result<EmployeeRoleResponse>.Success(employeeRoleResult.Value!.ToEmployeeRoleResponse());
+        }
+        return Result<EmployeeRoleResponse>.Failure(
+            employeeRoleResult.ErrorType,
+            [.. employeeRoleResult.Errors]);
+    }
 
-
-
-    public async Task<Result<IEnumerable<EmployeeRole>>> GetEmployeeRolessAsync(ISpecification<EmployeeRole> spec)
-        => await _employeeRoleRepository.ListAsync(spec);
-
-  
+    public async Task<Result<IEnumerable<EmployeeRoleResponse>>> GetEmployeeRolessAsync(ISpecification<EmployeeRole> spec)
+    {
+        Result<IEnumerable<EmployeeRole>> employeeRolesResult = await _employeeRoleRepository.ListAsync(spec);
+        if (employeeRolesResult.IsSuccess)
+        {
+            return Result<IEnumerable<EmployeeRoleResponse>>.Success(
+                employeeRolesResult.Value!.Select(e => e.ToEmployeeRoleResponse()));
+        }
+        return Result<IEnumerable<EmployeeRoleResponse>>.Failure(
+            employeeRolesResult.ErrorType,
+            [.. employeeRolesResult.Errors]);
+    }
 
     public async Task<Result<int>> CountAsync(ISpecification<EmployeeRole> spec)
         => await _employeeRoleRepository.CountAsync(spec);

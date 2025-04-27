@@ -21,7 +21,7 @@ public class EmployeeRoleRepository(ApplicationDbContext employeeRoleDbContext)
         try
         {
             EmployeeRole? employeeRole = await _employeeRoleDbContext.EmployeeRoles
-                .Include(x => x.RoleName) 
+                .Include(x => x.RoleName)
                 .FirstOrDefaultAsync(x => x.RoleName.Name == roleName);
 
             if (employeeRole == null)

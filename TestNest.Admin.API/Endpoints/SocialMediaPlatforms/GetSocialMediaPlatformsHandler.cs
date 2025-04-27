@@ -1,23 +1,19 @@
-﻿using MapsterMapper;
-using TestNest.Admin.API.Helpers;
+﻿using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
-using TestNest.Admin.Domain.SocialMedias;
+using TestNest.Admin.Application.Specifications.SoicalMediaPlatfomrSpecifications;
 using TestNest.Admin.SharedLibrary.Common.Results;
+using TestNest.Admin.SharedLibrary.Dtos.Paginations;
 using TestNest.Admin.SharedLibrary.Dtos.Requests;
 using TestNest.Admin.SharedLibrary.Exceptions.Common;
 using TestNest.Admin.SharedLibrary.StronglyTypeIds;
-using TestNest.Admin.Application.Specifications.SoicalMediaPlatfomrSpecifications;
-using TestNest.Admin.SharedLibrary.Dtos.Paginations;
 
 namespace TestNest.Admin.API.Endpoints.SocialMediaPlatforms;
 
 public class GetSocialMediaPlatformsHandler(
     ISocialMediaPlatformService socialMediaPlatformService,
-    IMapper mapper,
     IErrorResponseService errorResponseService)
 {
     private readonly ISocialMediaPlatformService _socialMediaPlatformService = socialMediaPlatformService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         [AsParameters] PaginationRequest paginationRequest,
@@ -49,11 +45,11 @@ public class GetSocialMediaPlatformsHandler(
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, socialMediaIdResult.ErrorType, socialMediaIdResult.Errors);
         }
 
-        Result<SocialMediaPlatform> result = await _socialMediaPlatformService
+        Result<SocialMediaPlatformResponse> result = await _socialMediaPlatformService
             .GetSocialMediaPlatformByIdAsync(socialMediaIdResult.Value!);
 
         return result.IsSuccess
-            ? Results.Ok(_mapper.Map<SocialMediaPlatformResponse>(result.Value!))
+            ? Results.Ok(result.Value!)
             : MinimalApiErrorHelper.HandleErrorResponse(httpContext, result.ErrorType, result.Errors);
     }
 
@@ -81,20 +77,20 @@ public class GetSocialMediaPlatformsHandler(
         }
         int totalCount = countResult.Value;
 
-        Result<IEnumerable<SocialMediaPlatform>> socialMediaPlatformsResult = await _socialMediaPlatformService.GetAllSocialMediaPlatformsAsync(spec);
+        Result<IEnumerable<SocialMediaPlatformResponse>> socialMediaPlatformsResult = await _socialMediaPlatformService.GetAllSocialMediaPlatformsAsync(spec);
         if (!socialMediaPlatformsResult.IsSuccess)
         {
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, socialMediaPlatformsResult.ErrorType, socialMediaPlatformsResult.Errors);
         }
 
-        IEnumerable<SocialMediaPlatform> socialMediaPlatforms = socialMediaPlatformsResult.Value!;
+        IEnumerable<SocialMediaPlatformResponse> socialMediaPlatforms = socialMediaPlatformsResult.Value!;
 
         if (socialMediaPlatforms == null || !socialMediaPlatforms.Any())
         {
             return Results.NotFound();
         }
 
-        IEnumerable<SocialMediaPlatformResponse> responseData = _mapper.Map<IEnumerable<SocialMediaPlatformResponse>>(socialMediaPlatforms!);
+        IEnumerable<SocialMediaPlatformResponse> responseData = socialMediaPlatforms!;
 
         int totalPages = (int)Math.Ceiling((double)totalCount / (paginationRequest.PageSize ?? 10));
 

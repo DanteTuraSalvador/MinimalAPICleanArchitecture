@@ -4,11 +4,13 @@ using TestNest.Admin.Application.Contracts.Common;
 using TestNest.Admin.Application.Contracts.Interfaces.Persistence;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Interfaces;
+using TestNest.Admin.Application.Mappings;
 using TestNest.Admin.Application.Services.Base;
 using TestNest.Admin.Application.Specifications.Common;
 using TestNest.Admin.Domain.Establishments;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Requests.Establishment;
+using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
 using TestNest.Admin.SharedLibrary.Exceptions.Common;
 using TestNest.Admin.SharedLibrary.Helpers;
 using TestNest.Admin.SharedLibrary.StronglyTypeIds;
@@ -27,7 +29,7 @@ public class EstablishmentAddressService(
     private readonly IEstablishmentAddressRepository _establishmentAddressRepository = establishmentAddressRepository;
     private readonly ILogger<EstablishmentAddressService> _logger = logger;
 
-    public async Task<Result<EstablishmentAddress>> CreateEstablishmentAddressAsync(
+    public async Task<Result<EstablishmentAddressResponse>> CreateEstablishmentAddressAsync(
         EstablishmentAddressForCreationRequest request)
     {
         using var scope = new TransactionScope(TransactionScopeOption.Required,
@@ -53,7 +55,7 @@ public class EstablishmentAddressService(
 
         if (!combinedValidationResult.IsSuccess)
         {
-            return Result<EstablishmentAddress>.Failure(
+            return Result<EstablishmentAddressResponse>.Failure(
                 ErrorType.Validation,
                 [.. combinedValidationResult.Errors]);
         }
@@ -69,7 +71,7 @@ public class EstablishmentAddressService(
 
         if (!uniquenessCheckResult.IsSuccess || uniquenessCheckResult.Value)
         {
-            return Result<EstablishmentAddress>.Failure(
+            return Result<EstablishmentAddressResponse>.Failure(
                 ErrorType.Conflict,
                 new Error("Validation", $"An address with the same latitude ({latitudeToCheck}) and longitude ({longitudeToCheck}) already exists for this establishment."));
         }
@@ -79,7 +81,7 @@ public class EstablishmentAddressService(
 
         if (!establishmentResult.IsSuccess)
         {
-            return Result<EstablishmentAddress>.Failure(
+            return Result<EstablishmentAddressResponse>.Failure(
                 establishmentResult.ErrorType,
                 [.. establishmentResult.Errors]);
         }
@@ -91,7 +93,7 @@ public class EstablishmentAddressService(
 
             if (!setNonPrimaryResult.IsSuccess)
             {
-                return Result<EstablishmentAddress>.Failure(setNonPrimaryResult.ErrorType, [.. setNonPrimaryResult.Errors]);
+                return Result<EstablishmentAddressResponse>.Failure(setNonPrimaryResult.ErrorType, [.. setNonPrimaryResult.Errors]);
             }
         }
 
@@ -102,7 +104,7 @@ public class EstablishmentAddressService(
 
         if (!establishmentAddressResult.IsSuccess)
         {
-            return Result<EstablishmentAddress>.Failure(
+            return Result<EstablishmentAddressResponse>.Failure(
                 establishmentAddressResult.ErrorType,
                 [.. establishmentAddressResult.Errors]);
         }
@@ -114,25 +116,25 @@ public class EstablishmentAddressService(
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<EstablishmentAddressResponse>.Success(commitResult.Value!.ToEstablishmentAddressResponse());
         }
 
-        return commitResult;
+        return Result<EstablishmentAddressResponse>.Failure(commitResult.ErrorType, commitResult.Errors);
     }
 
-    public async Task<Result<EstablishmentAddress>> UpdateEstablishmentAddressAsync(
+    public async Task<Result<EstablishmentAddressResponse>> UpdateEstablishmentAddressAsync(
         EstablishmentAddressId establishmentAddressId,
         EstablishmentAddressForUpdateRequest establishmentAddressForUpdateRequest)
     {
         using var scope = new TransactionScope(TransactionScopeOption.Required,
-                                               new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
-                                               TransactionScopeAsyncFlowOption.Enabled);
+            new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
+            TransactionScopeAsyncFlowOption.Enabled);
 
         Result<EstablishmentId> establishmentIdResult = IdHelper
             .ValidateAndCreateId<EstablishmentId>(establishmentAddressForUpdateRequest.EstablishmentId.ToString());
         if (!establishmentIdResult.IsSuccess)
         {
-            return Result<EstablishmentAddress>.Failure(
+            return Result<EstablishmentAddressResponse>.Failure(
                 ErrorType.Validation, establishmentIdResult.Errors);
         }
 
@@ -140,7 +142,7 @@ public class EstablishmentAddressService(
         bool establishmentExists = await _establishmentRepository.ExistsAsync(updateEstablishmentId);
         if (!establishmentExists)
         {
-            return Result<EstablishmentAddress>.Failure(
+            return Result<EstablishmentAddressResponse>.Failure(
                 ErrorType.NotFound, new Error("NotFound", $"Establishment with ID '{updateEstablishmentId}' not found."));
         }
 
@@ -148,7 +150,7 @@ public class EstablishmentAddressService(
             .GetByIdAsync(establishmentAddressId);
         if (!existingAddressResult.IsSuccess)
         {
-            return Result<EstablishmentAddress>.Failure(ErrorType.Validation, existingAddressResult.Errors);
+            return Result<EstablishmentAddressResponse>.Failure(ErrorType.Validation, existingAddressResult.Errors);
         }
 
         EstablishmentAddress existingAddress = existingAddressResult.Value!;
@@ -156,7 +158,7 @@ public class EstablishmentAddressService(
 
         if (existingAddress.EstablishmentId != updateEstablishmentId)
         {
-            return Result<EstablishmentAddress>.Failure(
+            return Result<EstablishmentAddressResponse>.Failure(
                 ErrorType.Unauthorized,
                 new Error("Unauthorized", $"Cannot update address. The provided EstablishmentId '{updateEstablishmentId}' does not match the existing address's EstablishmentId '{existingAddress.EstablishmentId}'."));
         }
@@ -181,7 +183,7 @@ public class EstablishmentAddressService(
             );
             if (!addressResult.IsSuccess)
             {
-                return Result<EstablishmentAddress>.Failure(addressResult.ErrorType, addressResult.Errors);
+                return Result<EstablishmentAddressResponse>.Failure(addressResult.ErrorType, addressResult.Errors);
             }
 
             updatedAddress = updatedAddress.WithAddress(addressResult.Value!).Value!;
@@ -199,7 +201,7 @@ public class EstablishmentAddressService(
 
         if (!uniquenessCheckResult.IsSuccess || uniquenessCheckResult.Value)
         {
-            return Result<EstablishmentAddress>.Failure(
+            return Result<EstablishmentAddressResponse>.Failure(
                 ErrorType.Conflict,
                 new Error("Validation", $"An address with the same latitude ({updatedLatitude}) and longitude ({updatedLongitude}) already exists for this establishment."));
         }
@@ -213,7 +215,7 @@ public class EstablishmentAddressService(
 
                 if (!setNonPrimaryResult.IsSuccess)
                 {
-                    return Result<EstablishmentAddress>.Failure(
+                    return Result<EstablishmentAddressResponse>.Failure(
                         setNonPrimaryResult.ErrorType, setNonPrimaryResult.Errors);
                 }
 
@@ -229,7 +231,7 @@ public class EstablishmentAddressService(
 
         if (!hasChanges)
         {
-            return Result<EstablishmentAddress>.Success(updatedAddress);
+            return Result<EstablishmentAddressResponse>.Success(existingAddress.ToEstablishmentAddressResponse());
         }
 
         Result<EstablishmentAddress> updateResult = await _establishmentAddressRepository.UpdateAsync(updatedAddress);
@@ -237,9 +239,9 @@ public class EstablishmentAddressService(
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<EstablishmentAddressResponse>.Success(commitResult.Value.ToEstablishmentAddressResponse());
         }
-        return commitResult;
+        return Result<EstablishmentAddressResponse>.Failure(commitResult.ErrorType, commitResult.Errors);
     }
 
     public async Task<Result> DeleteEstablishmentAddressAsync(
@@ -276,8 +278,13 @@ public class EstablishmentAddressService(
         return Result.Failure(commitResult.ErrorType, commitResult.Errors);
     }
 
-    public async Task<Result<EstablishmentAddress>> GetEstablishmentAddressByIdAsync(EstablishmentAddressId establishmentAddressId)
-        => await _establishmentAddressRepository.GetByIdAsync(establishmentAddressId);
+    public async Task<Result<EstablishmentAddressResponse>> GetEstablishmentAddressByIdAsync(EstablishmentAddressId establishmentAddressId)
+    {
+        Result<EstablishmentAddress> establishmentAddressResult = await _establishmentAddressRepository.GetByIdAsync(establishmentAddressId);
+        return establishmentAddressResult.IsSuccess
+            ? Result<EstablishmentAddressResponse>.Success(establishmentAddressResult.Value!.ToEstablishmentAddressResponse())
+            : Result<EstablishmentAddressResponse>.Failure(establishmentAddressResult.ErrorType, establishmentAddressResult.Errors);
+    }
 
     private async Task<Result<bool>> EstablishmentAddressCombinationExistsAsync(
         decimal latitude,
@@ -286,7 +293,7 @@ public class EstablishmentAddressService(
         EstablishmentAddressId? excludedAddressId = null)
     {
         Result<EstablishmentAddressId> idResult = excludedAddressId == null
-            ? IdHelper.ValidateAndCreateId<EstablishmentAddressId>(Guid.NewGuid().ToString()) // Dummy ID for creation check
+            ? IdHelper.ValidateAndCreateId<EstablishmentAddressId>(Guid.NewGuid().ToString())
             : IdHelper.ValidateAndCreateId<EstablishmentAddressId>(excludedAddressId.Value.ToString());
 
         if (!idResult.IsSuccess)
@@ -312,19 +319,19 @@ public class EstablishmentAddressService(
         return Result<bool>.Success(false);
     }
 
-    public async Task<Result<EstablishmentAddress>> PatchEstablishmentAddressAsync(
+    public async Task<Result<EstablishmentAddressResponse>> PatchEstablishmentAddressAsync(
         EstablishmentAddressId establishmentAddressId,
         EstablishmentAddressPatchRequest establishmentAddressPatchRequest)
     {
         using var scope = new TransactionScope(TransactionScopeOption.Required,
-                                               new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
-                                               TransactionScopeAsyncFlowOption.Enabled);
+            new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
+            TransactionScopeAsyncFlowOption.Enabled);
 
         Result<EstablishmentAddress> existingAddressResult = await _establishmentAddressRepository
             .GetByIdAsync(establishmentAddressId);
         if (!existingAddressResult.IsSuccess)
         {
-            return existingAddressResult;
+            return Result<EstablishmentAddressResponse>.Failure(existingAddressResult.ErrorType, existingAddressResult.Errors);
         }
 
         EstablishmentAddress existingAddress = existingAddressResult.Value!;
@@ -351,7 +358,7 @@ public class EstablishmentAddressService(
 
             if (!addressResult.IsSuccess)
             {
-                return Result<EstablishmentAddress>.Failure(
+                return Result<EstablishmentAddressResponse>.Failure(
                     addressResult.ErrorType, [.. addressResult.Errors]);
             }
 
@@ -369,7 +376,7 @@ public class EstablishmentAddressService(
 
         if (!uniquenessCheckResult.IsSuccess || uniquenessCheckResult.Value)
         {
-            return Result<EstablishmentAddress>.Failure(
+            return Result<EstablishmentAddressResponse>.Failure(
                 ErrorType.Conflict,
                 new Error("Validation", $"An address with the same latitude ({updatedLatitude}) and longitude ({updatedLongitude}) already exists for this establishment."));
         }
@@ -383,7 +390,7 @@ public class EstablishmentAddressService(
 
                 if (!setNonPrimaryResult.IsSuccess)
                 {
-                    return Result<EstablishmentAddress>.Failure(
+                    return Result<EstablishmentAddressResponse>.Failure(
                         setNonPrimaryResult.ErrorType, [.. setNonPrimaryResult.Errors]);
                 }
             }
@@ -398,15 +405,16 @@ public class EstablishmentAddressService(
             if (commitResult.IsSuccess)
             {
                 scope.Complete();
-                return commitResult;
+                return Result<EstablishmentAddressResponse>.Success(commitResult.Value.ToEstablishmentAddressResponse());
             }
-            return commitResult;
+            return Result<EstablishmentAddressResponse>.Failure(commitResult.ErrorType, commitResult.Errors);
         }
 
-        return Result<EstablishmentAddress>.Success(existingAddress);
+        return Result<EstablishmentAddressResponse>.Success(existingAddress.ToEstablishmentAddressResponse());
     }
 
-    private static bool HasAddressPatchUpdate(EstablishmentAddressPatchRequest request, Address existingAddress) =>
+    private static bool HasAddressPatchUpdate(EstablishmentAddressPatchRequest
+        request, Address existingAddress) =>
         request.AddressLine != existingAddress.AddressLine ||
         request.City != existingAddress.City ||
         request.Municipality != existingAddress.Municipality ||
@@ -429,6 +437,13 @@ public class EstablishmentAddressService(
     public async Task<Result<int>> CountAsync(ISpecification<EstablishmentAddress> spec)
         => await _establishmentAddressRepository.CountAsync(spec);
 
-    public async Task<Result<IEnumerable<EstablishmentAddress>>> ListAsync(ISpecification<EstablishmentAddress> spec)
-        => await _establishmentAddressRepository.ListAsync(spec);
+    public async Task<Result<IEnumerable<EstablishmentAddressResponse>>> ListAsync(ISpecification<EstablishmentAddress> spec)
+    {
+        Result<IEnumerable<EstablishmentAddress>> establishmentAddressesResult = await _establishmentAddressRepository.ListAsync(spec);
+        return establishmentAddressesResult.IsSuccess
+            ? Result<IEnumerable<EstablishmentAddressResponse>>.Success(
+                establishmentAddressesResult.Value!.Select(ea => ea.ToEstablishmentAddressResponse()))
+            : Result<IEnumerable<EstablishmentAddressResponse>>.Failure(
+                establishmentAddressesResult.ErrorType, establishmentAddressesResult.Errors);
+    }
 }

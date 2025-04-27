@@ -176,7 +176,6 @@ public class EmployeeRepository(ApplicationDbContext employeeDbContext) : Generi
                      e.Id != employeeId);
 }
 
-
 //public class EmployeeRepository(ApplicationDbContext employeeDbContext) : IEmployeeRepository
 //{
 //    private readonly ApplicationDbContext _employeeDbContext = employeeDbContext;

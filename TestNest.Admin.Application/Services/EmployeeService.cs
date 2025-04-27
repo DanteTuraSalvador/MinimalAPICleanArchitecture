@@ -4,10 +4,12 @@ using TestNest.Admin.Application.Contracts.Common;
 using TestNest.Admin.Application.Contracts.Interfaces.Persistence;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Interfaces;
+using TestNest.Admin.Application.Mappings;
 using TestNest.Admin.Application.Services.Base;
 using TestNest.Admin.Application.Specifications.EmployeeSpecifications;
 using TestNest.Admin.Domain.Employees;
 using TestNest.Admin.SharedLibrary.Common.Results;
+using TestNest.Admin.SharedLibrary.Dtos.Requests;
 using TestNest.Admin.SharedLibrary.Dtos.Requests.Employee;
 using TestNest.Admin.SharedLibrary.Exceptions;
 using TestNest.Admin.SharedLibrary.Exceptions.Common;
@@ -26,13 +28,11 @@ public class EmployeeService(
     IDatabaseExceptionHandlerFactory exceptionHandlerFactory,
     ILogger<EmployeeService> logger) : BaseService(unitOfWork, logger, exceptionHandlerFactory), IEmployeeService
 {
-    // Store the dependencies we need to work with. Think of these as our tools.
     private readonly IEmployeeRepository _employeeRepository = employeeRepository;
-
     private readonly IEmployeeRoleRepository _employeeRoleRepository = employeeRoleRepository;
     private readonly IEstablishmentRepository _establishmentRepository = establishmentRepository;
 
-    public async Task<Result<Employee>> CreateEmployeeAsync(
+    public async Task<Result<EmployeeResponse>> CreateEmployeeAsync(
         EmployeeForCreationRequest employeeForCreationRequest)
     {
         using var scope = new TransactionScope(TransactionScopeOption.Required,
@@ -55,7 +55,7 @@ public class EmployeeService(
 
         if (!combinedValidationResult.IsSuccess)
         {
-            return Result<Employee>.Failure(
+            return Result<EmployeeResponse>.Failure(
                 ErrorType.Validation,
                 [.. combinedValidationResult.Errors]);
         }
@@ -68,7 +68,7 @@ public class EmployeeService(
 
         if (!uniquenessCheckResult.IsSuccess)
         {
-            return Result<Employee>.Failure(
+            return Result<EmployeeResponse>.Failure(
                 uniquenessCheckResult.ErrorType,
                 uniquenessCheckResult.Errors);
         }
@@ -82,7 +82,7 @@ public class EmployeeService(
 
         if (!employeeResult.IsSuccess)
         {
-            return Result<Employee>.Failure(
+            return Result<EmployeeResponse>.Failure(
                 ErrorType.Validation,
                 [.. employeeResult.Errors]);
         }
@@ -94,12 +94,14 @@ public class EmployeeService(
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<EmployeeResponse>.Success(employee.ToEmployeeResponse());
         }
-        return commitResult;
+        return Result<EmployeeResponse>.Failure(
+            commitResult.ErrorType,
+            commitResult.Errors);
     }
 
-    public async Task<Result<Employee>> UpdateEmployeeAsync(
+    public async Task<Result<EmployeeResponse>> UpdateEmployeeAsync(
         EmployeeId employeeId,
         EmployeeForUpdateRequest employeeForUpdateRequest)
     {
@@ -110,7 +112,9 @@ public class EmployeeService(
         Result<Employee> validatedEmployee = await _employeeRepository.GetByIdAsync(employeeId);
         if (!validatedEmployee.IsSuccess)
         {
-            return validatedEmployee;
+            return Result<EmployeeResponse>.Failure(
+                validatedEmployee.ErrorType,
+                validatedEmployee.Errors);
         }
 
         Employee employee = validatedEmployee.Value!;
@@ -126,7 +130,7 @@ public class EmployeeService(
 
         if (!employeeStatusResult.IsSuccess)
         {
-            return Result<Employee>.Failure(
+            return Result<EmployeeResponse>.Failure(
                 employeeStatusResult.ErrorType,
                 employeeStatusResult.Errors
             );
@@ -143,9 +147,9 @@ public class EmployeeService(
 
         if (!combinedValidationResult.IsSuccess)
         {
-            return Result<Employee>.Failure(
+            return Result<EmployeeResponse>.Failure(
                 ErrorType.Validation,
-                combinedValidationResult.Errors.ToArray());
+                [.. combinedValidationResult.Errors]);
         }
 
         Employee updatedEmployeeResult = employee
@@ -165,7 +169,7 @@ public class EmployeeService(
 
         if (!uniquenessCheckResult.IsSuccess)
         {
-            return Result<Employee>.Failure(
+            return Result<EmployeeResponse>.Failure(
                 uniquenessCheckResult.ErrorType,
                 uniquenessCheckResult.Errors);
         }
@@ -173,19 +177,23 @@ public class EmployeeService(
         Result<Employee> updateResult = await _employeeRepository.UpdateAsync(updatedEmployeeResult);
         if (!updateResult.IsSuccess)
         {
-            return updateResult;
+            return Result<EmployeeResponse>.Failure(
+                updateResult.ErrorType,
+                updateResult.Errors);
         }
 
         Result<Employee> commitResult = await SafeCommitAsync(() => Result<Employee>.Success(updatedEmployeeResult));
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<EmployeeResponse>.Success(updatedEmployeeResult.ToEmployeeResponse());
         }
-        return commitResult;
+        return Result<EmployeeResponse>.Failure(
+            commitResult.ErrorType,
+            commitResult.Errors);
     }
 
-    public async Task<Result<Employee>> PatchEmployeeAsync(
+    public async Task<Result<EmployeeResponse>> PatchEmployeeAsync(
         EmployeeId employeeId,
         EmployeePatchRequest employeePatchRequest)
     {
@@ -196,7 +204,9 @@ public class EmployeeService(
         Result<Employee> validatedEmployee = await _employeeRepository.GetByIdAsync(employeeId);
         if (!validatedEmployee.IsSuccess)
         {
-            return validatedEmployee;
+            return Result<EmployeeResponse>.Failure(
+                validatedEmployee.ErrorType,
+                validatedEmployee.Errors);
         }
 
         Employee employee = validatedEmployee.Value!;
@@ -207,7 +217,7 @@ public class EmployeeService(
             Result<EmployeeNumber> employeeNumberResult = EmployeeNumber.Create(employeePatchRequest.EmployeeNumber);
             if (!employeeNumberResult.IsSuccess)
             {
-                return Result<Employee>.Failure(
+                return Result<EmployeeResponse>.Failure(
                     employeeNumberResult.ErrorType,
                     employeeNumberResult.Errors);
             }
@@ -223,7 +233,7 @@ public class EmployeeService(
 
             if (!nameResult.IsSuccess)
             {
-                return Result<Employee>.Failure(
+                return Result<EmployeeResponse>.Failure(
                     nameResult.ErrorType,
                     nameResult.Errors);
             }
@@ -235,7 +245,7 @@ public class EmployeeService(
             Result<EmailAddress> emailResult = EmailAddress.Create(employeePatchRequest.EmailAddress);
             if (!emailResult.IsSuccess)
             {
-                return Result<Employee>.Failure(
+                return Result<EmployeeResponse>.Failure(
                     emailResult.ErrorType,
                     emailResult.Errors);
             }
@@ -249,7 +259,7 @@ public class EmployeeService(
 
             if (!roleIdResult.IsSuccess)
             {
-                return Result<Employee>.Failure(
+                return Result<EmployeeResponse>.Failure(
                     roleIdResult.ErrorType,
                     roleIdResult.Errors);
             }
@@ -257,7 +267,7 @@ public class EmployeeService(
             bool roleExists = await _employeeRoleRepository.RoleIdExists(roleIdResult.Value!);
             if (!roleExists)
             {
-                return Result<Employee>.Failure(
+                return Result<EmployeeResponse>.Failure(
                     ErrorType.NotFound,
                     new Error(EmployeeException.InvalidEmployeeRoleId.Code.ToString(),
                         EmployeeException.InvalidEmployeeRoleId.Message));
@@ -272,7 +282,7 @@ public class EmployeeService(
 
             if (!establishmentIdResult.IsSuccess)
             {
-                return Result<Employee>.Failure(
+                return Result<EmployeeResponse>.Failure(
                     establishmentIdResult.ErrorType,
                     establishmentIdResult.Errors);
             }
@@ -282,7 +292,7 @@ public class EmployeeService(
 
             if (!establishmentExists)
             {
-                return Result<Employee>.Failure(
+                return Result<EmployeeResponse>.Failure(
                     ErrorType.NotFound,
                     new Error(EmployeeException.InvalidEstablishmentId.Code.ToString(),
                         EmployeeException.InvalidEstablishmentId.Message));
@@ -295,7 +305,7 @@ public class EmployeeService(
             Result<EmployeeStatus> statusResult = EmployeeStatus.FromId(employeePatchRequest.EmployeeStatusId.Value);
             if (!statusResult.IsSuccess)
             {
-                return Result<Employee>.Failure(statusResult.ErrorType, statusResult.Errors);
+                return Result<EmployeeResponse>.Failure(statusResult.ErrorType, statusResult.Errors);
             }
             employee = employee.WithEmployeeStatus(statusResult.Value!).Value!;
         }
@@ -319,7 +329,7 @@ public class EmployeeService(
 
             if (!personNameToCheckResult.IsSuccess)
             {
-                return Result<Employee>.Failure(
+                return Result<EmployeeResponse>.Failure(
                     personNameToCheckResult.ErrorType,
                     personNameToCheckResult.Errors);
             }
@@ -342,7 +352,7 @@ public class EmployeeService(
 
             if (!uniquenessCheckResult.IsSuccess)
             {
-                return Result<Employee>.Failure(
+                return Result<EmployeeResponse>.Failure(
                     ErrorType.Conflict,
                     new Error(EmployeeException.DuplicateResource.Code.ToString(),
                         EmployeeException.DuplicateEmployeeErrorMessage));
@@ -352,16 +362,20 @@ public class EmployeeService(
         Result<Employee> updateResult = await _employeeRepository.UpdateAsync(employee);
         if (!updateResult.IsSuccess)
         {
-            return updateResult;
+            return Result<EmployeeResponse>.Failure(
+                updateResult.ErrorType,
+                updateResult.Errors);
         }
 
         Result<Employee> commitResult = await SafeCommitAsync(() => Result<Employee>.Success(employee));
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<EmployeeResponse>.Success(employee.ToEmployeeResponse());
         }
-        return commitResult;
+        return Result<EmployeeResponse>.Failure(
+            commitResult.ErrorType,
+            commitResult.Errors);
     }
 
     public async Task<Result> DeleteEmployeeAsync(EmployeeId employeeId)
@@ -423,11 +437,21 @@ public class EmployeeService(
         return Result<bool>.Success(false);
     }
 
-    public async Task<Result<Employee>> GetEmployeeByIdAsync(EmployeeId employeeId)
-        => await _employeeRepository.GetByIdAsync(employeeId);
+    public async Task<Result<EmployeeResponse>> GetEmployeeByIdAsync(EmployeeId employeeId)
+    {
+        Result<Employee> employeeResult = await _employeeRepository.GetByIdAsync(employeeId);
+        return employeeResult.IsSuccess
+            ? Result<EmployeeResponse>.Success(employeeResult.Value!.ToEmployeeResponse())
+            : Result<EmployeeResponse>.Failure(employeeResult.ErrorType, employeeResult.Errors);
+    }
 
-    public async Task<Result<IEnumerable<Employee>>> GetAllEmployeesAsync(EmployeeSpecification spec)
-        => await _employeeRepository.ListAsync(spec);
+    public async Task<Result<IEnumerable<EmployeeResponse>>> GetAllEmployeesAsync(EmployeeSpecification spec)
+    {
+        Result<IEnumerable<Employee>> employeesResult = await _employeeRepository.ListAsync(spec);
+        return employeesResult.IsSuccess
+            ? Result<IEnumerable<EmployeeResponse>>.Success(employeesResult.Value!.Select(e => e.ToEmployeeResponse()))
+            : Result<IEnumerable<EmployeeResponse>>.Failure(employeesResult.ErrorType, employeesResult.Errors);
+    }
 
     public async Task<Result<int>> CountAsync(EmployeeSpecification spec)
         => await _employeeRepository.CountAsync(spec);

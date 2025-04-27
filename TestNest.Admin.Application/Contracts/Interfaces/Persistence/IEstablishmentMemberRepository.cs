@@ -30,7 +30,6 @@ namespace TestNest.Admin.Application.Contracts.Interfaces.Persistence;
 //        EstablishmentId establishmentId);
 //}
 
-
 public interface IEstablishmentMemberRepository : IGenericRepository<EstablishmentMember, EstablishmentMemberId>
 {
     Task DetachAsync(EstablishmentMember establishmentMember);

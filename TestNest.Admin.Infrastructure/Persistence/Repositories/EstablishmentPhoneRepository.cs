@@ -11,7 +11,6 @@ using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 
 namespace TestNest.Admin.Infrastructure.Persistence.Repositories;
 
-
 public class EstablishmentPhoneRepository(
     ApplicationDbContext establishmentPhoneDbContext,
     ILogger<EstablishmentPhoneRepository> logger)

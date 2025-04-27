@@ -1,8 +1,6 @@
-﻿using MapsterMapper;
-using TestNest.Admin.API.Helpers;
+﻿using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Specifications.EstablishmentPhoneSpecifications;
-using TestNest.Admin.Domain.Establishments;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Paginations;
 using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
@@ -12,11 +10,9 @@ using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 namespace TestNest.Admin.API.Endpoints.EstablishmentPhones;
 
 public class GetEstablishmentPhonesHandler(
-    IEstablishmentPhoneService establishmentPhoneService,
-    IMapper mapper)
+    IEstablishmentPhoneService establishmentPhoneService)
 {
     private readonly IEstablishmentPhoneService _establishmentPhoneService = establishmentPhoneService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         [AsParameters] PaginationRequest paginationRequest,
@@ -52,11 +48,11 @@ public class GetEstablishmentPhonesHandler(
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, phoneIdResult.ErrorType, phoneIdResult.Errors);
         }
 
-        Result<EstablishmentPhone> result = await _establishmentPhoneService
+        Result<EstablishmentPhoneResponse> result = await _establishmentPhoneService
             .GetEstablishmentPhoneByIdAsync(phoneIdResult.Value!);
 
         return result.IsSuccess && result.Value != null
-            ? Results.Ok(_mapper.Map<EstablishmentPhoneResponse>(result.Value))
+            ? Results.Ok(result.Value)
             : MinimalApiErrorHelper.HandleErrorResponse(httpContext, ErrorType.NotFound, [new Error("NotFound", $"Establishment phone with ID '{establishmentPhoneId}' not found.")]);
     }
 
@@ -86,19 +82,19 @@ public class GetEstablishmentPhonesHandler(
         }
         int totalCount = countResult.Value;
 
-        Result<IEnumerable<EstablishmentPhone>> phonesResult = await _establishmentPhoneService.ListAsync(spec);
+        Result<IEnumerable<EstablishmentPhoneResponse>> phonesResult = await _establishmentPhoneService.ListAsync(spec);
         if (!phonesResult.IsSuccess)
         {
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, phonesResult.ErrorType, phonesResult.Errors);
         }
-        IEnumerable<EstablishmentPhone> phones = phonesResult.Value!;
+        IEnumerable<EstablishmentPhoneResponse> phones = phonesResult.Value!;
 
         if (phones == null || !phones.Any())
         {
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, ErrorType.NotFound, [new Error("NotFound", "No establishment phones found matching the criteria.")]);
         }
 
-        IEnumerable<EstablishmentPhoneResponse> responseData = _mapper.Map<IEnumerable<EstablishmentPhoneResponse>>(phones);
+        IEnumerable<EstablishmentPhoneResponse> responseData = phones;
 
         int totalPages = (int)Math.Ceiling((double)totalCount / (paginationRequest.PageSize ?? 10));
 

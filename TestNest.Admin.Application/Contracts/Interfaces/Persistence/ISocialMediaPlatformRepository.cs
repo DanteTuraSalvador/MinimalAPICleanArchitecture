@@ -36,5 +36,4 @@ public interface ISocialMediaPlatformRepository : IGenericRepository<SocialMedia
     Task<Result<IEnumerable<SocialMediaPlatform>>> ListAsync(ISpecification<SocialMediaPlatform> spec);
 
     Task<Result<int>> CountAsync(ISpecification<SocialMediaPlatform> spec);
-   
 }

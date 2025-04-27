@@ -1,23 +1,20 @@
-﻿using MapsterMapper;
+﻿
 using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
-using TestNest.Admin.Domain.Employees;
+using TestNest.Admin.Application.Specifications.EmployeeSpecifications;
 using TestNest.Admin.SharedLibrary.Common.Results;
+using TestNest.Admin.SharedLibrary.Dtos.Paginations;
 using TestNest.Admin.SharedLibrary.Dtos.Requests;
 using TestNest.Admin.SharedLibrary.Exceptions.Common;
 using TestNest.Admin.SharedLibrary.StronglyTypeIds;
-using TestNest.Admin.Application.Specifications.EmployeeSpecifications;
-using TestNest.Admin.SharedLibrary.Dtos.Paginations;
 
 namespace TestNest.Admin.API.Endpoints.Employees;
 
 public class GetEmployeesHandler(
     IEmployeeService employeeService,
-    IMapper mapper,
     IErrorResponseService errorResponseService)
 {
     private readonly IEmployeeService _employeeService = employeeService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         [AsParameters] PaginationRequest paginationRequest,
@@ -55,10 +52,10 @@ public class GetEmployeesHandler(
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, employeeIdResult.ErrorType, employeeIdResult.Errors);
         }
 
-        Result<Employee> result = await _employeeService.GetEmployeeByIdAsync(employeeIdResult.Value!);
+        Result<EmployeeResponse> result = await _employeeService.GetEmployeeByIdAsync(employeeIdResult.Value!);
 
         return result.IsSuccess
-            ? Results.Ok(_mapper.Map<EmployeeResponse>(result.Value!))
+            ? Results.Ok(result.Value!)
             : MinimalApiErrorHelper.HandleErrorResponse(httpContext, result.ErrorType, result.Errors);
     }
 
@@ -98,20 +95,20 @@ public class GetEmployeesHandler(
         }
         int totalCount = countResult.Value;
 
-        Result<IEnumerable<Employee>> employeesResult = await _employeeService.GetAllEmployeesAsync(spec);
+        Result<IEnumerable<EmployeeResponse>> employeesResult = await _employeeService.GetAllEmployeesAsync(spec);
         if (!employeesResult.IsSuccess)
         {
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, employeesResult.ErrorType, employeesResult.Errors);
         }
 
-        IEnumerable<Employee> employees = employeesResult.Value!;
+        IEnumerable<EmployeeResponse> employees = employeesResult.Value!;
 
         if (employees == null || !employees.Any())
         {
             return Results.NotFound();
         }
 
-        IEnumerable<EmployeeResponse> responseData = _mapper.Map<IEnumerable<EmployeeResponse>>(employees!);
+        IEnumerable<EmployeeResponse> responseData = employees!;
 
         int totalPages = (int)Math.Ceiling((double)totalCount / (paginationRequest.PageSize ?? 10));
 

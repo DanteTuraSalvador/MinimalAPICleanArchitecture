@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TestNest.Admin.SharedLibrary.Dtos.Requests.Employee;
-using TestNest.Admin.SharedLibrary.Dtos.Requests;
 using TestNest.Admin.SharedLibrary.Dtos.Paginations;
-
+using TestNest.Admin.SharedLibrary.Dtos.Requests.Employee;
+using TestNest.Admin.SharedLibrary.Dtos.Responses;
 
 namespace TestNest.Admin.API.Endpoints.EmployeeRoles;
 
@@ -67,8 +66,5 @@ public static class EmployeeRoleEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .WithSummary("Gets a list of employee roles or a single employee role by ID.")
             .WithDescription("Gets a list of employee roles with optional filtering, sorting, and pagination, or a single employee role by ID.");
-
-
     }
 }
-

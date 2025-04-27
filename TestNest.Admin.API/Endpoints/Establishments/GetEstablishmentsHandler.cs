@@ -1,22 +1,17 @@
-﻿using MapsterMapper;
-using TestNest.Admin.API.Helpers;
+﻿using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Specifications.EstablishmentSpecifications;
-using TestNest.Admin.Domain.Establishments;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Paginations;
 using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
-using TestNest.Admin.SharedLibrary.Exceptions.Common;
 using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 
 namespace TestNest.Admin.API.Endpoints.Establishments;
 
 public class GetEstablishmentsHandler(
-    IEstablishmentService establishmentService,
-    IMapper mapper)
+    IEstablishmentService establishmentService)
 {
     private readonly IEstablishmentService _establishmentService = establishmentService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         [AsParameters] PaginationRequest paginationRequest,
@@ -49,10 +44,10 @@ public class GetEstablishmentsHandler(
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, establishmentIdResult.ErrorType, establishmentIdResult.Errors);
         }
 
-        Result<Establishment> result = await _establishmentService.GetEstablishmentByIdAsync(establishmentIdResult.Value!);
+        Result<EstablishmentResponse> result = await _establishmentService.GetEstablishmentByIdAsync(establishmentIdResult.Value!);
 
         return result.IsSuccess
-            ? Results.Ok(_mapper.Map<EstablishmentResponse>(result.Value!))
+            ? Results.Ok(result.Value!)
             : MinimalApiErrorHelper.HandleErrorResponse(httpContext, result.ErrorType, result.Errors);
     }
 
@@ -82,20 +77,20 @@ public class GetEstablishmentsHandler(
         }
         int totalCount = countResult.Value;
 
-        Result<IEnumerable<Establishment>> establishmentsResult = await _establishmentService.GetEstablishmentsAsync(spec);
+        Result<IEnumerable<EstablishmentResponse>> establishmentsResult = await _establishmentService.GetEstablishmentsAsync(spec);
         if (!establishmentsResult.IsSuccess)
         {
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, establishmentsResult.ErrorType, establishmentsResult.Errors);
         }
 
-        IEnumerable<Establishment> establishments = establishmentsResult.Value!;
+        IEnumerable<EstablishmentResponse> establishments = establishmentsResult.Value!;
 
         if (establishments == null || !establishments.Any())
         {
             return Results.NotFound();
         }
 
-        IEnumerable<EstablishmentResponse> responseData = _mapper.Map<IEnumerable<EstablishmentResponse>>(establishments!);
+        IEnumerable<EstablishmentResponse> responseData = establishments!;
 
         int totalPages = (int)Math.Ceiling((double)totalCount / (paginationRequest.PageSize ?? 10));
 

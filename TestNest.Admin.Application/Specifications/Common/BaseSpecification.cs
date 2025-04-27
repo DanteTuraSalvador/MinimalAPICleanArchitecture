@@ -12,7 +12,7 @@ public class BaseSpecification<T> : ISpecification<T> where T : class
     public bool IsPagingEnabled { get; set; }
     public List<Expression<Func<T, object>>> Includes { get; set; } = [];
 
-    public List<string> IncludeStrings { get; set; } = []; 
+    public List<string> IncludeStrings { get; set; } = [];
 
     public BaseSpecification()
     {

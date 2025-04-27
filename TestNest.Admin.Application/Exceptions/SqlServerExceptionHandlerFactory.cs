@@ -8,7 +8,6 @@ namespace TestNest.Admin.Application.Exceptions;
 
 public class SqlServerExceptionHandlerFactory() : IDatabaseExceptionHandlerFactory
 {
-
     public Result HandleDbUpdateException(DbUpdateException ex)
     {
         if (ex.InnerException is SqlException sqlException)

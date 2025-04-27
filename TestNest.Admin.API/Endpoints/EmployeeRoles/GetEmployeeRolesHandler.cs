@@ -1,19 +1,16 @@
-﻿using MapsterMapper;
-using TestNest.Admin.API.Helpers;
+﻿using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Specifications.EmployeeRoleSpecifications;
-using TestNest.Admin.Domain.Employees;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Paginations;
-using TestNest.Admin.SharedLibrary.Dtos.Requests;
+using TestNest.Admin.SharedLibrary.Dtos.Responses;
 using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 
 namespace TestNest.Admin.API.Endpoints.EmployeeRoles;
 
-public class GetEmployeeRolesHandler(IEmployeeRoleService employeeRoleService, IMapper mapper)
+public class GetEmployeeRolesHandler(IEmployeeRoleService employeeRoleService)
 {
     private readonly IEmployeeRoleService _employeeRoleService = employeeRoleService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         [AsParameters] PaginationRequest paginationRequest,
@@ -46,14 +43,13 @@ public class GetEmployeeRolesHandler(IEmployeeRoleService employeeRoleService, I
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, employeeRoleIdValidatedResult.ErrorType, employeeRoleIdValidatedResult.Errors);
         }
 
-        Result<EmployeeRole> result = await _employeeRoleService
+        Result<EmployeeRoleResponse> result = await _employeeRoleService
             .GetEmployeeRoleByIdAsync(employeeRoleIdValidatedResult.Value!);
 
         return result.IsSuccess
-            ? Results.Ok(_mapper.Map<EmployeeRoleResponse>(result.Value!))
+            ? Results.Ok(result.Value!)
             : MinimalApiErrorHelper.HandleErrorResponse(httpContext, result.ErrorType, result.Errors);
     }
-
 
     private async Task<IResult> GetEmployeeRolesListAsync(
         PaginationRequest paginationRequest,
@@ -78,20 +74,20 @@ public class GetEmployeeRolesHandler(IEmployeeRoleService employeeRoleService, I
         }
         int totalCount = countResult.Value;
 
-        Result<IEnumerable<EmployeeRole>> employeeRolesResult = await _employeeRoleService.GetEmployeeRolessAsync(spec);
+        Result<IEnumerable<EmployeeRoleResponse>> employeeRolesResult = await _employeeRoleService.GetEmployeeRolessAsync(spec);
         if (!employeeRolesResult.IsSuccess)
         {
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, employeeRolesResult.ErrorType, employeeRolesResult.Errors);
         }
 
-        IEnumerable<EmployeeRole> employeeRoles = employeeRolesResult.Value!;
+        IEnumerable<EmployeeRoleResponse> employeeRoles = employeeRolesResult.Value!;
 
         if (employeeRoles == null || !employeeRoles.Any())
         {
-            return Results.NotFound(); // Or handle with your ErrorResponseService
+            return Results.NotFound();
         }
 
-        IEnumerable<EmployeeRoleResponse> responseData = _mapper.Map<IEnumerable<EmployeeRoleResponse>>(employeeRoles!);
+        IEnumerable<EmployeeRoleResponse> responseData = employeeRoles!;
 
         int totalPages = (int)Math.Ceiling((double)totalCount / (paginationRequest.PageSize ?? 10));
 

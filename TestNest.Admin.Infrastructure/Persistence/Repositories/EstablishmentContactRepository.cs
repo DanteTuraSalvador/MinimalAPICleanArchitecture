@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using TestNest.Admin.Application.Contracts.Interfaces.Persistence;
 using TestNest.Admin.Application.Specifications.Common;
 using TestNest.Admin.Domain.Establishments;
@@ -11,7 +10,6 @@ using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 using TestNest.Admin.SharedLibrary.ValueObjects;
 
 namespace TestNest.Admin.Infrastructure.Persistence.Repositories;
-
 
 public class EstablishmentContactRepository(
     ApplicationDbContext establishmentContactDbContext)

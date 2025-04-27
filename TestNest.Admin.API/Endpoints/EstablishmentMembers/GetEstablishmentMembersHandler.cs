@@ -1,8 +1,6 @@
-﻿using MapsterMapper;
-using TestNest.Admin.API.Helpers;
+﻿using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Specifications.EstablishmentMemberSpecifications;
-using TestNest.Admin.Domain.Establishments;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Paginations;
 using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
@@ -12,11 +10,9 @@ using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 namespace TestNest.Admin.API.Endpoints.EstablishmentMembers;
 
 public class GetEstablishmentMembersHandler(
-    IEstablishmentMemberService establishmentMemberService,
-    IMapper mapper)
+    IEstablishmentMemberService establishmentMemberService)
 {
     private readonly IEstablishmentMemberService _establishmentMemberService = establishmentMemberService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         [AsParameters] PaginationRequest paginationRequest,
@@ -54,11 +50,11 @@ public class GetEstablishmentMembersHandler(
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, memberIdResult.ErrorType, memberIdResult.Errors);
         }
 
-        Result<EstablishmentMember> result = await _establishmentMemberService
+        Result<EstablishmentMemberResponse> result = await _establishmentMemberService
             .GetEstablishmentMemberByIdAsync(memberIdResult.Value!);
 
         return result.IsSuccess && result.Value != null
-            ? Results.Ok(_mapper.Map<EstablishmentMemberResponse>(result.Value))
+            ? Results.Ok(result.Value)
             : MinimalApiErrorHelper.HandleErrorResponse(httpContext, ErrorType.NotFound, [new Error("NotFound", $"Establishment member with ID '{establishmentMemberId}' not found.")]);
     }
 
@@ -92,19 +88,19 @@ public class GetEstablishmentMembersHandler(
         }
         int totalCount = countResult.Value;
 
-        Result<IEnumerable<EstablishmentMember>> membersResult = await _establishmentMemberService.ListAsync(spec);
+        Result<IEnumerable<EstablishmentMemberResponse>> membersResult = await _establishmentMemberService.ListAsync(spec);
         if (!membersResult.IsSuccess)
         {
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, membersResult.ErrorType, membersResult.Errors);
         }
-        IEnumerable<EstablishmentMember> members = membersResult.Value!;
+        IEnumerable<EstablishmentMemberResponse> members = membersResult.Value!;
 
         if (members == null || !members.Any())
         {
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, ErrorType.NotFound, [new Error("NotFound", "No establishment members found matching the criteria.")]);
         }
 
-        IEnumerable<EstablishmentMemberResponse> responseData = _mapper.Map<IEnumerable<EstablishmentMemberResponse>>(members);
+        IEnumerable<EstablishmentMemberResponse> responseData = members;
 
         int totalPages = (int)Math.Ceiling((double)totalCount / (paginationRequest.PageSize ?? 10));
 

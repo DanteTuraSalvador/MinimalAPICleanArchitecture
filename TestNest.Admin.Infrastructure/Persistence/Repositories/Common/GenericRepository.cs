@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TestNest.Admin.Application.Contracts.Common;
 using TestNest.Admin.SharedLibrary.Common.BaseEntity;
-using TestNest.Admin.SharedLibrary.StronglyTypeIds.Common;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Exceptions.Common;
+using TestNest.Admin.SharedLibrary.StronglyTypeIds.Common;
 
 namespace TestNest.Admin.Infrastructure.Persistence.Repositories.Common;
 

@@ -1,26 +1,21 @@
-﻿using MapsterMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
-using TestNest.Admin.Domain.Employees;
 using TestNest.Admin.SharedLibrary.Common.Results;
-using TestNest.Admin.SharedLibrary.Dtos.Requests.Employee;
-using TestNest.Admin.SharedLibrary.Dtos.Responses;
-using TestNest.Admin.SharedLibrary.StronglyTypeIds;
-using Microsoft.AspNetCore.JsonPatch;
-using System.ComponentModel.DataAnnotations;
 using TestNest.Admin.SharedLibrary.Dtos.Requests;
+using TestNest.Admin.SharedLibrary.Dtos.Requests.Employee;
 using TestNest.Admin.SharedLibrary.Exceptions.Common;
+using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 
 namespace TestNest.Admin.API.Endpoints.Employees;
 
 public class PatchEmployeeHandler(
     IEmployeeService employeeService,
-    IMapper mapper,
     IErrorResponseService errorResponseService)
 {
     private readonly IEmployeeService _employeeService = employeeService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         string employeeId,
@@ -46,11 +41,11 @@ public class PatchEmployeeHandler(
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, ErrorType.Validation, errors);
         }
 
-        Result<Employee> result = await _employeeService.PatchEmployeeAsync(employeeIdResult.Value!, employeePatchRequest);
+        Result<EmployeeResponse> result = await _employeeService.PatchEmployeeAsync(employeeIdResult.Value!, employeePatchRequest);
 
         if (result.IsSuccess)
         {
-            EmployeeResponse dto = _mapper.Map<EmployeeResponse>(result.Value!);
+            EmployeeResponse dto = result.Value!;
             return Results.Ok(dto);
         }
 

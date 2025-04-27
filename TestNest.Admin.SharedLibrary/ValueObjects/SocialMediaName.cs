@@ -60,7 +60,7 @@ public sealed class SocialMediaName : ValueObject
         return Result.Combine(
             Guard.AgainstNullOrWhiteSpace(name, static () => SocialMediaNameException.EmptyName()),
             Guard.AgainstCondition(!ValidNamePattern.IsMatch(name), static () => SocialMediaNameException.InvalidCharacters()),
-            Guard.AgainstRange(name.Length, 3, 50,static () => SocialMediaNameException.InvalidLength()),
+            Guard.AgainstRange(name.Length, 3, 50, static () => SocialMediaNameException.InvalidLength()),
             Guard.AgainstNullOrWhiteSpace(platformURL, static () => SocialMediaNameException.EmptyPlatformURL()),
             Guard.AgainstCondition(!Uri.IsWellFormedUriString(platformURL, UriKind.Absolute) || !platformURL.StartsWith("http", StringComparison.OrdinalIgnoreCase), static () => SocialMediaNameException.InvalidPlatformURLFormat())
         );

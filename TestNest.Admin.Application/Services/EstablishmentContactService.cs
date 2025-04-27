@@ -4,11 +4,13 @@ using TestNest.Admin.Application.Contracts.Common;
 using TestNest.Admin.Application.Contracts.Interfaces.Persistence;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Interfaces;
+using TestNest.Admin.Application.Mappings;
 using TestNest.Admin.Application.Services.Base;
 using TestNest.Admin.Application.Specifications.Common;
 using TestNest.Admin.Domain.Establishments;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Requests.Establishment;
+using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
 using TestNest.Admin.SharedLibrary.Exceptions.Common;
 using TestNest.Admin.SharedLibrary.Helpers;
 using TestNest.Admin.SharedLibrary.StronglyTypeIds;
@@ -25,13 +27,14 @@ public class EstablishmentContactService(
 {
     private readonly IEstablishmentContactRepository _establishmentContactRepository = establishmentContactRepository;
     private readonly IEstablishmentRepository _establishmentRepository = establishmentRepository;
+    private readonly ILogger<EstablishmentContactService> _logger = logger;
 
-    public async Task<Result<EstablishmentContact>> CreateEstablishmentContactAsync(
+    public async Task<Result<EstablishmentContactResponse>> CreateEstablishmentContactAsync(
         EstablishmentContactForCreationRequest creationRequest)
     {
         using var scope = new TransactionScope(TransactionScopeOption.Required,
-                                             new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
-                                             TransactionScopeAsyncFlowOption.Enabled);
+                                               new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
+                                               TransactionScopeAsyncFlowOption.Enabled);
 
         Result<EstablishmentId> establishmentIdResult = IdHelper
             .ValidateAndCreateId<EstablishmentId>(creationRequest.EstablishmentId);
@@ -51,7 +54,7 @@ public class EstablishmentContactService(
 
         if (!combinedValidationResult.IsSuccess)
         {
-            return Result<EstablishmentContact>.Failure(
+            return Result<EstablishmentContactResponse>.Failure(
                 ErrorType.Validation,
                 [.. combinedValidationResult.Errors]);
         }
@@ -61,19 +64,19 @@ public class EstablishmentContactService(
 
         if (!establishmentResult.IsSuccess)
         {
-            return Result<EstablishmentContact>.Failure(
+            return Result<EstablishmentContactResponse>.Failure(
                 establishmentResult.ErrorType,
                 [.. establishmentResult.Errors]);
         }
 
         Result<bool> uniquenessCheckResult = await EstablishmentContactCombinationExistsAsync(
-                personNameResult.Value!,
-                phoneNumberResult.Value!,
-                establishmentIdResult.Value!);
+            personNameResult.Value!,
+            phoneNumberResult.Value!,
+            establishmentIdResult.Value!);
 
         if (!uniquenessCheckResult.IsSuccess || uniquenessCheckResult.Value)
         {
-            return Result<EstablishmentContact>.Failure(
+            return Result<EstablishmentContactResponse>.Failure(
                 ErrorType.Conflict,
                 new Error("Validation", $"A contact with the same name and phone number already exists for this establishment."));
         }
@@ -85,7 +88,7 @@ public class EstablishmentContactService(
 
             if (!setNonPrimaryResult.IsSuccess)
             {
-                return Result<EstablishmentContact>.Failure(setNonPrimaryResult.ErrorType, [.. setNonPrimaryResult.Errors]);
+                return Result<EstablishmentContactResponse>.Failure(setNonPrimaryResult.ErrorType, [.. setNonPrimaryResult.Errors]);
             }
         }
 
@@ -97,7 +100,7 @@ public class EstablishmentContactService(
 
         if (!establishmentContactResult.IsSuccess)
         {
-            return Result<EstablishmentContact>.Failure(
+            return Result<EstablishmentContactResponse>.Failure(
                 establishmentContactResult.ErrorType,
                 [.. establishmentContactResult.Errors]);
         }
@@ -109,34 +112,45 @@ public class EstablishmentContactService(
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<EstablishmentContactResponse>.Success(commitResult.Value!.ToEstablishmentContactResponse());
         }
 
-        return commitResult;
+        return Result<EstablishmentContactResponse>.Failure(commitResult.ErrorType, commitResult.Errors);
     }
 
-    public async Task<Result<EstablishmentContact>> GetEstablishmentContactByIdAsync(EstablishmentContactId establishmentContactId)
-        => await _establishmentContactRepository.GetByIdAsync(establishmentContactId);
+    public async Task<Result<EstablishmentContactResponse>> GetEstablishmentContactByIdAsync(EstablishmentContactId establishmentContactId)
+    {
+        Result<EstablishmentContact> contactResult = await _establishmentContactRepository.GetByIdAsync(establishmentContactId);
+        return contactResult.IsSuccess
+            ? Result<EstablishmentContactResponse>.Success(contactResult.Value!.ToEstablishmentContactResponse())
+            : Result<EstablishmentContactResponse>.Failure(contactResult.ErrorType, contactResult.Errors);
+    }
 
-    public async Task<Result<IEnumerable<EstablishmentContact>>> GetEstablishmentContactsAsync(ISpecification<EstablishmentContact> spec)
-        => await _establishmentContactRepository.ListAsync(spec);
+    public async Task<Result<IEnumerable<EstablishmentContactResponse>>> GetEstablishmentContactsAsync(ISpecification<EstablishmentContact> spec)
+    {
+        Result<IEnumerable<EstablishmentContact>> contactsResult = await _establishmentContactRepository.ListAsync(spec);
+        return contactsResult.IsSuccess
+            ? Result<IEnumerable<EstablishmentContactResponse>>.Success(
+                contactsResult.Value!.Select(c => c.ToEstablishmentContactResponse()))
+            : Result<IEnumerable<EstablishmentContactResponse>>.Failure(contactsResult.ErrorType, contactsResult.Errors);
+    }
 
     public async Task<Result<int>> CountAsync(ISpecification<EstablishmentContact> spec)
         => await _establishmentContactRepository.CountAsync(spec);
 
-    public async Task<Result<EstablishmentContact>> UpdateEstablishmentContactAsync(
-       EstablishmentContactId establishmentContactId,
-       EstablishmentContactForUpdateRequest updateRequest)
+    public async Task<Result<EstablishmentContactResponse>> UpdateEstablishmentContactAsync(
+        EstablishmentContactId establishmentContactId,
+        EstablishmentContactForUpdateRequest updateRequest)
     {
         using var scope = new TransactionScope(TransactionScopeOption.Required,
-                                             new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
-                                             TransactionScopeAsyncFlowOption.Enabled);
+                                               new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
+                                               TransactionScopeAsyncFlowOption.Enabled);
 
         Result<EstablishmentId> establishmentIdResult = IdHelper
             .ValidateAndCreateId<EstablishmentId>(updateRequest.EstablishmentId.ToString());
         if (!establishmentIdResult.IsSuccess)
         {
-            return Result<EstablishmentContact>.Failure(
+            return Result<EstablishmentContactResponse>.Failure(
                 ErrorType.Validation, establishmentIdResult.Errors);
         }
 
@@ -144,7 +158,7 @@ public class EstablishmentContactService(
         bool establishmentExists = await _establishmentRepository.ExistsAsync(updateEstablishmentId);
         if (!establishmentExists)
         {
-            return Result<EstablishmentContact>.Failure(
+            return Result<EstablishmentContactResponse>.Failure(
                 ErrorType.NotFound, new Error("NotFound", $"Establishment with ID '{updateEstablishmentId}' not found."));
         }
 
@@ -152,7 +166,7 @@ public class EstablishmentContactService(
             .GetByIdAsync(establishmentContactId);
         if (!existingContactResult.IsSuccess)
         {
-            return Result<EstablishmentContact>.Failure(ErrorType.NotFound, existingContactResult.Errors);
+            return Result<EstablishmentContactResponse>.Failure(ErrorType.NotFound, existingContactResult.Errors);
         }
 
         EstablishmentContact existingContact = existingContactResult.Value!;
@@ -160,7 +174,7 @@ public class EstablishmentContactService(
 
         if (existingContact.EstablishmentId != updateEstablishmentId)
         {
-            return Result<EstablishmentContact>.Failure(
+            return Result<EstablishmentContactResponse>.Failure(
                 ErrorType.Unauthorized,
                 new Error("Unauthorized", $"Cannot update contact. The provided EstablishmentId '{updateEstablishmentId}' does not match the existing contact's EstablishmentId '{existingContact.EstablishmentId}'."));
         }
@@ -178,7 +192,7 @@ public class EstablishmentContactService(
                 updateRequest.ContactPersonLastName ?? existingContact.ContactPerson.LastName);
             if (!personNameResult.IsSuccess)
             {
-                return Result<EstablishmentContact>.Failure(personNameResult.ErrorType, personNameResult.Errors);
+                return Result<EstablishmentContactResponse>.Failure(personNameResult.ErrorType, personNameResult.Errors);
             }
             updatedPersonName = personNameResult.Value!;
             updatedContact = updatedContact.WithContactPerson(updatedPersonName).Value!;
@@ -194,7 +208,7 @@ public class EstablishmentContactService(
             Result<PhoneNumber> phoneNumberResult = PhoneNumber.Create(updateRequest.ContactPhoneNumber ?? existingContact.ContactPhone.PhoneNo);
             if (!phoneNumberResult.IsSuccess)
             {
-                return Result<EstablishmentContact>.Failure(phoneNumberResult.ErrorType, phoneNumberResult.Errors);
+                return Result<EstablishmentContactResponse>.Failure(phoneNumberResult.ErrorType, phoneNumberResult.Errors);
             }
             updatedPhoneNumber = phoneNumberResult.Value!;
             updatedContact = updatedContact.WithContactPhone(updatedPhoneNumber).Value!;
@@ -206,19 +220,19 @@ public class EstablishmentContactService(
         }
 
         Result<bool> uniquenessCheckResult = await EstablishmentContactCombinationExistsAsync(
-                updatedPersonName,
-                updatedPhoneNumber,
-                updateEstablishmentId,
-                establishmentContactId);
+            updatedPersonName,
+            updatedPhoneNumber,
+            updateEstablishmentId,
+            establishmentContactId);
 
         if (!uniquenessCheckResult.IsSuccess || uniquenessCheckResult.Value)
         {
-            return Result<EstablishmentContact>.Failure(
+            return Result<EstablishmentContactResponse>.Failure(
                 ErrorType.Conflict,
                 new Error("Validation", $"A contact with the same name and phone number already exists for this establishment."));
         }
 
-        if (updateRequest.IsPrimary && updateRequest.IsPrimary != existingContact.IsPrimary)
+        if (updateRequest.IsPrimary != existingContact.IsPrimary)
         {
             if (updateRequest.IsPrimary)
             {
@@ -226,7 +240,7 @@ public class EstablishmentContactService(
                     .SetNonPrimaryForEstablishmentContanctAsync(updateEstablishmentId, establishmentContactId);
                 if (!setNonePrimaryResult.IsSuccess)
                 {
-                    return Result<EstablishmentContact>.Failure(setNonePrimaryResult.ErrorType, setNonePrimaryResult.Errors);
+                    return Result<EstablishmentContactResponse>.Failure(setNonePrimaryResult.ErrorType, setNonePrimaryResult.Errors);
                 }
             }
             updatedContact = updatedContact.WithPrimaryFlag(updateRequest.IsPrimary).Value!;
@@ -235,22 +249,22 @@ public class EstablishmentContactService(
 
         if (!hasChanges)
         {
-            return Result<EstablishmentContact>.Success(updatedContact);
+            return Result<EstablishmentContactResponse>.Success(updatedContact.ToEstablishmentContactResponse());
         }
 
         Result<EstablishmentContact> updateResult = await _establishmentContactRepository.UpdateAsync(updatedContact);
         if (!updateResult.IsSuccess)
         {
-            return Result<EstablishmentContact>.Failure(updateResult.ErrorType, updateResult.Errors);
+            return Result<EstablishmentContactResponse>.Failure(updateResult.ErrorType, updateResult.Errors);
         }
 
-        Result<EstablishmentContact> commitResult = await SafeCommitAsync(() => Result<EstablishmentContact>.Success(updatedContact));
+        Result<EstablishmentContact> commitResult = await SafeCommitAsync(() => updateResult);
         if (commitResult.IsSuccess)
         {
             scope.Complete();
-            return commitResult;
+            return Result<EstablishmentContactResponse>.Success(commitResult.Value!.ToEstablishmentContactResponse());
         }
-        return commitResult;
+        return Result<EstablishmentContactResponse>.Failure(commitResult.ErrorType, commitResult.Errors);
     }
 
     private static bool HasContactUpdate(EstablishmentContactForUpdateRequest request) =>
@@ -258,7 +272,7 @@ public class EstablishmentContactService(
         request.ContactPersonMiddleName != null ||
         request.ContactPersonLastName != null;
 
-    public async Task<Result<EstablishmentContact>> PatchEstablishmentContactAsync(
+    public async Task<Result<EstablishmentContactResponse>> PatchEstablishmentContactAsync(
         EstablishmentContactId establishmentContactId,
         EstablishmentContactPatchRequest patchRequest)
     {
@@ -270,7 +284,7 @@ public class EstablishmentContactService(
             .GetByIdAsync(establishmentContactId);
         if (!existingContactResult.IsSuccess)
         {
-            return existingContactResult;
+            return Result<EstablishmentContactResponse>.Failure(existingContactResult.ErrorType, existingContactResult.Errors);
         }
 
         EstablishmentContact existingContact = existingContactResult.Value!;
@@ -280,21 +294,21 @@ public class EstablishmentContactService(
             .ValidateAndCreateId<EstablishmentId>(existingContact.EstablishmentId.ToString());
         if (!establishmentIdResult.IsSuccess)
         {
-            return Result<EstablishmentContact>.Failure(ErrorType.Validation, establishmentIdResult.Errors);
+            return Result<EstablishmentContactResponse>.Failure(ErrorType.Validation, establishmentIdResult.Errors);
         }
 
         EstablishmentId requestEstablishmentId = establishmentIdResult.Value!;
         bool establishmentExists = await _establishmentRepository.ExistsAsync(requestEstablishmentId);
         if (!establishmentExists)
         {
-            return Result<EstablishmentContact>.Failure(
+            return Result<EstablishmentContactResponse>.Failure(
                 ErrorType.NotFound,
                 new Error("NotFound", $"Establishment with ID '{requestEstablishmentId}' not found."));
         }
 
         if (requestEstablishmentId != existingContact.EstablishmentId)
         {
-            return Result<EstablishmentContact>.Failure(
+            return Result<EstablishmentContactResponse>.Failure(
                 ErrorType.Unauthorized,
                 new Error("Unauthorized", $"Cannot patch contact. The provided EstablishmentId '{requestEstablishmentId}' does not match the existing contact's EstablishmentId '{existingContact.EstablishmentId}'."));
         }
@@ -302,8 +316,11 @@ public class EstablishmentContactService(
         EstablishmentContact updatedContact = existingContact;
         PersonName? updatedPersonName = null;
         PhoneNumber? updatedPhoneNumber = null;
+        bool hasChanges = false;
 
-        if (HasContactPatchUpdate(patchRequest, existingContact.ContactPerson))
+        if (patchRequest.ContactPersonFirstName != existingContact.ContactPerson.FirstName ||
+            patchRequest.ContactPersonMiddleName != existingContact.ContactPerson.MiddleName ||
+            patchRequest.ContactPersonLastName != existingContact.ContactPerson.LastName)
         {
             Result<PersonName> personNameResult = PersonName.Create(
                 patchRequest.ContactPersonFirstName ?? existingContact.ContactPerson.FirstName,
@@ -312,10 +329,11 @@ public class EstablishmentContactService(
 
             if (!personNameResult.IsSuccess)
             {
-                return Result<EstablishmentContact>.Failure(personNameResult.ErrorType, personNameResult.Errors);
+                return Result<EstablishmentContactResponse>.Failure(personNameResult.ErrorType, personNameResult.Errors);
             }
             updatedPersonName = personNameResult.Value!;
             updatedContact = updatedContact.WithContactPerson(updatedPersonName).Value!;
+            hasChanges = true;
         }
         else
         {
@@ -327,64 +345,60 @@ public class EstablishmentContactService(
             Result<PhoneNumber> phoneNumberResult = PhoneNumber.Create(patchRequest.ContactPhoneNumber ?? existingContact.ContactPhone.PhoneNo);
             if (!phoneNumberResult.IsSuccess)
             {
-                return Result<EstablishmentContact>.Failure(phoneNumberResult.ErrorType, phoneNumberResult.Errors);
+                return Result<EstablishmentContactResponse>.Failure(phoneNumberResult.ErrorType, phoneNumberResult.Errors);
             }
             updatedPhoneNumber = phoneNumberResult.Value!;
             updatedContact = updatedContact.WithContactPhone(phoneNumberResult.Value!).Value!;
+            hasChanges = true;
         }
         else
         {
             updatedPhoneNumber = existingContact.ContactPhone;
         }
 
-        // Check for uniqueness (excluding the current contact)
         Result<bool> uniquenessCheckResult = await EstablishmentContactCombinationExistsAsync(
-                updatedPersonName,
-                updatedPhoneNumber,
-                requestEstablishmentId,
-                establishmentContactId);
+            updatedPersonName,
+            updatedPhoneNumber,
+            requestEstablishmentId,
+            establishmentContactId);
 
         if (!uniquenessCheckResult.IsSuccess || uniquenessCheckResult.Value)
         {
-            return Result<EstablishmentContact>.Failure(
+            return Result<EstablishmentContactResponse>.Failure(
                 ErrorType.Conflict,
                 new Error("Validation", $"A contact with the same name and phone number already exists for this establishment."));
         }
 
-        if (patchRequest.IsPrimary != existingContact.IsPrimary)
+        if (patchRequest.IsPrimary.HasValue && patchRequest.IsPrimary != existingContact.IsPrimary)
         {
-            if (patchRequest.IsPrimary!.Value)
+            if (patchRequest.IsPrimary.Value)
             {
                 Result setNonPrimaryResult = await _establishmentContactRepository
                     .SetNonPrimaryForEstablishmentContanctAsync(requestEstablishmentId, establishmentContactId);
 
                 if (!setNonPrimaryResult.IsSuccess)
                 {
-                    return Result<EstablishmentContact>.Failure(setNonPrimaryResult.ErrorType, setNonPrimaryResult.Errors);
+                    return Result<EstablishmentContactResponse>.Failure(setNonPrimaryResult.ErrorType, setNonPrimaryResult.Errors);
                 }
             }
             updatedContact = updatedContact.WithPrimaryFlag(patchRequest.IsPrimary.Value).Value!;
+            hasChanges = true;
         }
 
-        if (updatedContact != existingContact)
+        if (hasChanges)
         {
             Result<EstablishmentContact> updateResult = await _establishmentContactRepository.UpdateAsync(updatedContact);
             Result<EstablishmentContact> commitResult = await SafeCommitAsync(() => updateResult);
             if (commitResult.IsSuccess)
             {
                 scope.Complete();
-                return commitResult;
+                return Result<EstablishmentContactResponse>.Success(commitResult.Value!.ToEstablishmentContactResponse());
             }
-            return commitResult;
+            return Result<EstablishmentContactResponse>.Failure(commitResult.ErrorType, commitResult.Errors);
         }
 
-        return Result<EstablishmentContact>.Success(updatedContact);
+        return Result<EstablishmentContactResponse>.Success(existingContact.ToEstablishmentContactResponse());
     }
-
-    private static bool HasContactPatchUpdate(EstablishmentContactPatchRequest request, PersonName existingContactPerson) =>
-        request.ContactPersonFirstName != existingContactPerson.FirstName ||
-        request.ContactPersonMiddleName != existingContactPerson.MiddleName ||
-        request.ContactPersonLastName != existingContactPerson.LastName;
 
     public async Task<Result> DeleteEstablishmentContactAsync(EstablishmentContactId establishmentContactId)
     {
@@ -404,7 +418,7 @@ public class EstablishmentContactService(
         if (existingContact.IsPrimary)
         {
             return Result.Failure(ErrorType.Validation,
-                 new Error("DeletionNotAllowed", $"Cannot delete the primary contact for Establishment ID '{existingContact.EstablishmentId}'. Please set another address as primary first."));
+                new Error("DeletionNotAllowed", $"Cannot delete the primary contact for Establishment ID '{existingContact.EstablishmentId}'. Please set another contact as primary first."));
         }
 
         Result deleteResult = await _establishmentContactRepository.DeleteAsync(establishmentContactId);

@@ -4,12 +4,14 @@ using TestNest.Admin.Application.Contracts.Common;
 using TestNest.Admin.Application.Contracts.Interfaces.Persistence;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
 using TestNest.Admin.Application.Interfaces;
+using TestNest.Admin.Application.Mappings;
 using TestNest.Admin.Application.Services.Base;
 using TestNest.Admin.Application.Specifications.Common;
 using TestNest.Admin.Domain.Employees;
 using TestNest.Admin.Domain.Establishments;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Requests.Establishment;
+using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
 using TestNest.Admin.SharedLibrary.Exceptions.Common;
 using TestNest.Admin.SharedLibrary.Helpers;
 using TestNest.Admin.SharedLibrary.StronglyTypeIds;
@@ -30,10 +32,18 @@ public class EstablishmentMemberService(
     private readonly IEmployeeRepository _employeeRepository = employeeRepository;
     private readonly ILogger<EstablishmentMemberService> _logger = logger;
 
-    public async Task<Result<EstablishmentMember>> GetEstablishmentMemberByIdAsync(EstablishmentMemberId establishmentMemberId)
-        => await _establishmentMemberRepository.GetByIdAsync(establishmentMemberId);
+    public async Task<Result<EstablishmentMemberResponse>> GetEstablishmentMemberByIdAsync(EstablishmentMemberId establishmentMemberId)
+    {
+        Result<EstablishmentMember> establishmentMemberResult = await _establishmentMemberRepository
+            .GetByIdAsync(establishmentMemberId);
+        return establishmentMemberResult.IsSuccess
+            ? Result<EstablishmentMemberResponse>.Success(establishmentMemberResult.Value!.ToEstablishmentMemberResponse())
+            : Result<EstablishmentMemberResponse>.Failure(
+                establishmentMemberResult.ErrorType,
+                [.. establishmentMemberResult.Errors]);
+    }
 
-    public async Task<Result<EstablishmentMember>> CreateEstablishmentMemberAsync(EstablishmentMemberForCreationRequest establishmentMemberForCreationRequest)
+    public async Task<Result<EstablishmentMemberResponse>> CreateEstablishmentMemberAsync(EstablishmentMemberForCreationRequest establishmentMemberForCreationRequest)
     {
         using var scope = new TransactionScope(TransactionScopeOption.Required,
             new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
@@ -57,7 +67,7 @@ public class EstablishmentMemberService(
 
             if (!combinedValidationResult.IsSuccess)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     ErrorType.Validation,
                     [.. combinedValidationResult.Errors]);
             }
@@ -67,7 +77,7 @@ public class EstablishmentMemberService(
 
             if (!establishmentResult.IsSuccess)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     establishmentResult.ErrorType,
                     [.. establishmentResult.Errors]);
             }
@@ -75,14 +85,14 @@ public class EstablishmentMemberService(
             Result<Employee> employeeResult = await _employeeRepository.GetByIdAsync(employeeIdResult.Value!);
             if (!employeeResult.IsSuccess)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     ErrorType.NotFound,
                     new Error("NotFound", $"Employee with ID '{employeeIdResult.Value}' not found."));
             }
 
             if (employeeResult.Value!.EstablishmentId != establishmentIdResult.Value!)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     ErrorType.Validation,
                     new Error("Validation", $"Employee with ID '{employeeIdResult.Value}' does not belong to Establishment with ID '{establishmentIdResult.Value}'."));
             }
@@ -93,7 +103,7 @@ public class EstablishmentMemberService(
 
             if (!uniquenessCheckResult.IsSuccess || uniquenessCheckResult.Value)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     ErrorType.Conflict,
                     new Error("Validation", $"Employee with ID '{employeeIdResult.Value}' already exists as a member in this establishment."));
             }
@@ -108,7 +118,9 @@ public class EstablishmentMemberService(
 
             if (!establishmentMemberResult.IsSuccess)
             {
-                return establishmentMemberResult;
+                return Result<EstablishmentMemberResponse>.Failure(
+                    establishmentMemberResult.ErrorType,
+                    [.. establishmentMemberResult.Errors]);
             }
 
             EstablishmentMember newMember = establishmentMemberResult.Value!;
@@ -118,18 +130,22 @@ public class EstablishmentMemberService(
             if (commitResult.IsSuccess)
             {
                 scope.Complete();
-                return commitResult;
+                return Result<EstablishmentMemberResponse>.Success(commitResult.Value!.ToEstablishmentMemberResponse());
             }
 
-            return commitResult;
+            return Result<EstablishmentMemberResponse>.Failure(
+                commitResult.ErrorType,
+                [.. commitResult.Errors]);
         }
         catch (Exception ex)
         {
-            return Result<EstablishmentMember>.Failure(ErrorType.Internal, [new Error("ServiceError", ex.Message)]);
+            return Result<EstablishmentMemberResponse>.Failure(
+                ErrorType.Internal,
+                new Error("ServiceError", ex.Message));
         }
     }
 
-    public async Task<Result<EstablishmentMember>> UpdateEstablishmentMemberAsync(
+    public async Task<Result<EstablishmentMemberResponse>> UpdateEstablishmentMemberAsync(
         EstablishmentMemberId establishmentMemberId,
         EstablishmentMemberForUpdateRequest establishmentMemberForUpdateRequest)
     {
@@ -152,7 +168,7 @@ public class EstablishmentMemberService(
 
             if (!combinedValidationResult.IsSuccess)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     ErrorType.Validation,
                     [.. combinedValidationResult.Errors]);
             }
@@ -161,7 +177,7 @@ public class EstablishmentMemberService(
             bool establishmentExists = await _establishmentRepository.ExistsAsync(updateEstablishmentId);
             if (!establishmentExists)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     ErrorType.NotFound,
                     new Error("NotFound", $"Establishment with ID '{updateEstablishmentId}' not found."));
             }
@@ -170,29 +186,32 @@ public class EstablishmentMemberService(
                 .GetByIdAsync(establishmentMemberId);
             if (!existingMemberResult.IsSuccess)
             {
-                return existingMemberResult;
+                return Result<EstablishmentMemberResponse>.Failure(
+                    existingMemberResult.ErrorType,
+                    [.. existingMemberResult.Errors]);
             }
             EstablishmentMember existingMember = existingMemberResult.Value!;
             await _establishmentMemberRepository.DetachAsync(existingMember);
 
             if (existingMember.EstablishmentId != updateEstablishmentId)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     ErrorType.Unauthorized,
                     new Error("Unauthorized", $"Cannot update member. The provided EstablishmentId '{updateEstablishmentId}' does not match the existing member's EstablishmentId '{existingMember.EstablishmentId}'."));
             }
 
-            Result<Domain.Employees.Employee> employeeResult = await _employeeRepository.GetByIdAsync(existingMember.EmployeeId);
+            // TODO: make sure this repoistory will return Response object not Domain object
+            Result<Employee> employeeResult = await _employeeRepository.GetByIdAsync(existingMember.EmployeeId);
             if (!employeeResult.IsSuccess)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     ErrorType.NotFound,
                     new Error("NotFound", $"Employee with ID '{existingMember.EmployeeId}' not found."));
             }
 
             if (employeeResult.Value!.EstablishmentId != updateEstablishmentId)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     ErrorType.Validation,
                     new Error("Validation", $"Employee with ID '{existingMember.EmployeeId}' does not belong to Establishment with ID '{updateEstablishmentId}'."));
             }
@@ -204,7 +223,9 @@ public class EstablishmentMemberService(
 
             if (!updatedMemberResult.IsSuccess)
             {
-                return updatedMemberResult;
+                return Result<EstablishmentMemberResponse>.Failure(
+                    updatedMemberResult.ErrorType,
+                    [.. updatedMemberResult.Errors]);
             }
 
             EstablishmentMember updatedMember = updatedMemberResult.Value!;
@@ -216,7 +237,7 @@ public class EstablishmentMemberService(
 
             if (!uniquenessCheckResult.IsSuccess || uniquenessCheckResult.Value)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     ErrorType.Conflict,
                     new Error("Validation", $"Employee with ID '{updatedMember.EmployeeId}' already exists as a member in this establishment."));
             }
@@ -227,17 +248,17 @@ public class EstablishmentMemberService(
             if (commitResult.IsSuccess)
             {
                 scope.Complete();
-                return commitResult;
+                return Result<EstablishmentMemberResponse>.Success(updateResult.Value!.ToEstablishmentMemberResponse());
             }
-            return commitResult;
+            return Result<EstablishmentMemberResponse>.Failure(commitResult.ErrorType, [.. commitResult.Errors]);
         }
         catch (Exception ex)
         {
-            return Result<EstablishmentMember>.Failure(ErrorType.Internal, new Error("ServiceError", ex.Message));
+            return Result<EstablishmentMemberResponse>.Failure(ErrorType.Internal, new Error("ServiceError", ex.Message));
         }
     }
 
-    public async Task<Result<EstablishmentMember>> PatchEstablishmentMemberAsync(
+    public async Task<Result<EstablishmentMemberResponse>> PatchEstablishmentMemberAsync(
         EstablishmentMemberId establishmentMemberId,
         EstablishmentMemberPatchRequest establishmentMemberPatchRequest)
     {
@@ -250,7 +271,7 @@ public class EstablishmentMemberService(
                 .GetByIdAsync(establishmentMemberId);
             if (!existingMemberResult.IsSuccess)
             {
-                return existingMemberResult;
+                return Result<EstablishmentMemberResponse>.Failure(existingMemberResult.ErrorType, [.. existingMemberResult.Errors]);
             }
             EstablishmentMember existingMember = existingMemberResult.Value!;
             await _establishmentMemberRepository.DetachAsync(existingMember);
@@ -267,7 +288,7 @@ public class EstablishmentMemberService(
                 Result<EstablishmentId> establishmentIdResult = IdHelper.ValidateAndCreateId<EstablishmentId>(establishmentMemberPatchRequest.EstablishmentId);
                 if (!establishmentIdResult.IsSuccess)
                 {
-                    return Result<EstablishmentMember>.Failure(ErrorType.Validation, establishmentIdResult.Errors);
+                    return Result<EstablishmentMemberResponse>.Failure(ErrorType.Validation, establishmentIdResult.Errors);
                 }
                 updatedEstablishmentId = establishmentIdResult.Value!;
             }
@@ -277,7 +298,7 @@ public class EstablishmentMemberService(
                 Result<EmployeeId> employeeIdResult = IdHelper.ValidateAndCreateId<EmployeeId>(establishmentMemberPatchRequest.EmployeeId);
                 if (!employeeIdResult.IsSuccess)
                 {
-                    return Result<EstablishmentMember>.Failure(ErrorType.Validation, employeeIdResult.Errors);
+                    return Result<EstablishmentMemberResponse>.Failure(ErrorType.Validation, employeeIdResult.Errors);
                 }
                 updatedEmployeeId = employeeIdResult.Value!;
             }
@@ -287,7 +308,7 @@ public class EstablishmentMemberService(
                 Result<MemberTitle> titleResult = MemberTitle.Create(establishmentMemberPatchRequest.MemberTitle);
                 if (!titleResult.IsSuccess)
                 {
-                    return Result<EstablishmentMember>.Failure(ErrorType.Validation, titleResult.Errors);
+                    return Result<EstablishmentMemberResponse>.Failure(ErrorType.Validation, titleResult.Errors);
                 }
 
                 updatedTitle = titleResult.Value!;
@@ -298,7 +319,7 @@ public class EstablishmentMemberService(
                 Result<MemberDescription> descriptionResult = MemberDescription.Create(establishmentMemberPatchRequest.MemberDescription);
                 if (!descriptionResult.IsSuccess)
                 {
-                    return Result<EstablishmentMember>.Failure(ErrorType.Validation, descriptionResult.Errors);
+                    return Result<EstablishmentMemberResponse>.Failure(ErrorType.Validation, descriptionResult.Errors);
                 }
 
                 updatedDescription = descriptionResult.Value!;
@@ -309,7 +330,7 @@ public class EstablishmentMemberService(
                 Result<MemberTag> tagResult = MemberTag.Create(establishmentMemberPatchRequest.MemberTag);
                 if (!tagResult.IsSuccess)
                 {
-                    return Result<EstablishmentMember>.Failure(ErrorType.Validation, tagResult.Errors);
+                    return Result<EstablishmentMemberResponse>.Failure(ErrorType.Validation, tagResult.Errors);
                 }
 
                 updatedTag = tagResult.Value!;
@@ -318,14 +339,14 @@ public class EstablishmentMemberService(
             Result<Employee> employeeResult = await _employeeRepository.GetByIdAsync(updatedEmployeeId);
             if (!employeeResult.IsSuccess)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     ErrorType.NotFound,
                     new Error("NotFound", $"Employee with ID '{updatedEmployeeId}' not found."));
             }
 
             if (employeeResult.Value!.EstablishmentId != updatedEstablishmentId)
             {
-                return Result<EstablishmentMember>.Failure(
+                return Result<EstablishmentMemberResponse>.Failure(
                     ErrorType.Validation,
                     new Error("Validation", $"Employee with ID '{updatedEmployeeId}' does not belong to Establishment with ID '{updatedEstablishmentId}'."));
             }
@@ -339,7 +360,7 @@ public class EstablishmentMemberService(
 
             if (!updatedMemberResult.IsSuccess)
             {
-                return updatedMemberResult;
+                return Result<EstablishmentMemberResponse>.Failure(updatedMemberResult.ErrorType, [.. updatedMemberResult.Errors]);
             }
 
             EstablishmentMember updatedMember = updatedMemberResult.Value!;
@@ -350,14 +371,13 @@ public class EstablishmentMemberService(
             if (commitResult.IsSuccess)
             {
                 scope.Complete();
-                return commitResult;
+                return Result<EstablishmentMemberResponse>.Failure(commitResult.ErrorType, [.. commitResult.Errors]);
             }
-            return commitResult;
+            return Result<EstablishmentMemberResponse>.Failure(commitResult.ErrorType, [.. commitResult.Errors]);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error patching establishment member {EstablishmentMemberId}.", establishmentMemberId);
-            return Result<EstablishmentMember>.Failure(ErrorType.Internal, [new Error("ServiceError", ex.Message)]);
+            return Result<EstablishmentMemberResponse>.Failure(ErrorType.Internal, [new Error("ServiceError", ex.Message)]);
         }
     }
 
@@ -393,8 +413,20 @@ public class EstablishmentMemberService(
         }
     }
 
-    public async Task<Result<IEnumerable<EstablishmentMember>>> ListAsync(ISpecification<EstablishmentMember> spec)
-        => await _establishmentMemberRepository.ListAsync(spec);
+    public async Task<Result<IEnumerable<EstablishmentMemberResponse>>> ListAsync(ISpecification<EstablishmentMember> spec)
+    {
+        Result<IEnumerable<EstablishmentMember>> establishmentMembersResult = await _establishmentMemberRepository
+            .ListAsync(spec);
+        if (!establishmentMembersResult.IsSuccess)
+        {
+            return Result<IEnumerable<EstablishmentMemberResponse>>.Failure(
+                establishmentMembersResult.ErrorType,
+                [.. establishmentMembersResult.Errors]);
+        }
+        IEnumerable<EstablishmentMemberResponse> establishmentMembersResponse = establishmentMembersResult.Value!
+            .Select(member => member.ToEstablishmentMemberResponse());
+        return Result<IEnumerable<EstablishmentMemberResponse>>.Success(establishmentMembersResponse);
+    }
 
     public async Task<Result<int>> CountAsync(ISpecification<EstablishmentMember> spec)
         => await _establishmentMemberRepository.CountAsync(spec);
@@ -405,7 +437,7 @@ public class EstablishmentMemberService(
         EstablishmentMemberId? excludedMemberId = null)
     {
         Result<EstablishmentMemberId> idResult = excludedMemberId == null
-            ? IdHelper.ValidateAndCreateId<EstablishmentMemberId>(Guid.NewGuid().ToString()) 
+            ? IdHelper.ValidateAndCreateId<EstablishmentMemberId>(Guid.NewGuid().ToString())
             : IdHelper.ValidateAndCreateId<EstablishmentMemberId>(excludedMemberId.Value.ToString());
 
         if (!idResult.IsSuccess)

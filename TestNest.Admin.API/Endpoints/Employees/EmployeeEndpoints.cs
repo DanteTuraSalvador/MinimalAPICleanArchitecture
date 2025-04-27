@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
-using TestNest.Admin.SharedLibrary.Dtos.Paginations;
-using TestNest.Admin.SharedLibrary.Dtos.Requests.Employee;
-using TestNest.Admin.SharedLibrary.Dtos.Requests;
 using Microsoft.AspNetCore.Mvc;
+using TestNest.Admin.SharedLibrary.Dtos.Paginations;
+using TestNest.Admin.SharedLibrary.Dtos.Requests;
+using TestNest.Admin.SharedLibrary.Dtos.Requests.Employee;
 
 namespace TestNest.Admin.API.Endpoints.Employees;
 

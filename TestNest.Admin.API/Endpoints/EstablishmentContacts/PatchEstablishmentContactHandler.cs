@@ -1,10 +1,8 @@
-﻿using MapsterMapper;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using TestNest.Admin.API.Helpers;
 using TestNest.Admin.Application.Contracts.Interfaces.Service;
-using TestNest.Admin.Domain.Establishments;
 using TestNest.Admin.SharedLibrary.Common.Results;
 using TestNest.Admin.SharedLibrary.Dtos.Requests.Establishment;
 using TestNest.Admin.SharedLibrary.Dtos.Responses.Establishments;
@@ -14,11 +12,9 @@ using TestNest.Admin.SharedLibrary.StronglyTypeIds;
 namespace TestNest.Admin.API.Endpoints.EstablishmentContacts;
 
 public class PatchEstablishmentContactHandler(
-    IEstablishmentContactService establishmentContactService,
-    IMapper mapper)
+    IEstablishmentContactService establishmentContactService)
 {
     private readonly IEstablishmentContactService _establishmentContactService = establishmentContactService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<IResult> HandleAsync(
         string establishmentContactId,
@@ -45,12 +41,12 @@ public class PatchEstablishmentContactHandler(
             return MinimalApiErrorHelper.HandleErrorResponse(httpContext, ErrorType.Validation, errors);
         }
 
-        Result<EstablishmentContact> patchedContact = await _establishmentContactService
+        Result<EstablishmentContactResponse> patchedContact = await _establishmentContactService
             .PatchEstablishmentContactAsync(contactIdResult.Value!, contactPatchRequest);
 
         if (patchedContact.IsSuccess)
         {
-            return Results.Ok(_mapper.Map<EstablishmentContactResponse>(patchedContact.Value!));
+            return Results.Ok(patchedContact.Value!);
         }
 
         return MinimalApiErrorHelper.HandleErrorResponse(httpContext, patchedContact.ErrorType, patchedContact.Errors);
